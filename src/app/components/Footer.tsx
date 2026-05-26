@@ -1,0 +1,204 @@
+import { useState } from 'react';
+import { motion } from 'motion/react';
+import { Leaf, Mail, Instagram, Twitter, Youtube, Github, CheckCircle, MapPin, Phone } from 'lucide-react';
+
+interface Props { lang: 'id' | 'en' }
+
+const t = {
+  id: {
+    tagline: 'Melestarikan kearifan lokal Suku Baduy melalui teknologi modern untuk generasi yang mencintai alam.',
+    explore: 'Jelajahi',
+    links1: ['Beranda', 'Peta Budaya', 'The Lab', 'Edukasi', 'Donasi'],
+    hrefs1: ['#beranda', '#jelajah', '#lab', '#edukasi', '#donasi'],
+    about: 'Tentang',
+    links2: ['Tentang Kami', 'Tim Pengembang', 'Mitra', 'Blog', 'Kontak'],
+    legal: 'Legal',
+    links3: ['Kebijakan Privasi', 'Syarat & Ketentuan', 'Hak Cipta'],
+    subscribe: 'Dapatkan Update Terbaru',
+    subDesc: 'Terima artikel, konten budaya, dan update terbaru langsung ke email Anda.',
+    subPlaceholder: 'Masukkan email Anda',
+    subBtn: 'Berlangganan',
+    subSuccess: 'Berhasil! Terima kasih telah berlangganan 🌿',
+    contact: 'Kontak',
+    address: 'Jl. Pendidikan No. 1, Jakarta Selatan, DKI Jakarta',
+    email: 'hello@baduyedu.id',
+    phone: '+62 21 1234 5678',
+    rights: '© 2026 BaduyEdu. Hak Cipta Dilindungi.',
+    madeWith: 'Dibuat dengan ❤️ untuk Kompetisi OLIVIA 2026',
+  },
+  en: {
+    tagline: 'Preserving the local wisdom of the Baduy Tribe through modern technology for a nature-loving generation.',
+    explore: 'Explore',
+    links1: ['Home', 'Culture Map', 'The Lab', 'Education', 'Donate'],
+    hrefs1: ['#beranda', '#jelajah', '#lab', '#edukasi', '#donasi'],
+    about: 'About',
+    links2: ['About Us', 'Dev Team', 'Partners', 'Blog', 'Contact'],
+    legal: 'Legal',
+    links3: ['Privacy Policy', 'Terms & Conditions', 'Copyright'],
+    subscribe: 'Get Latest Updates',
+    subDesc: 'Receive articles, cultural content, and latest updates directly to your email.',
+    subPlaceholder: 'Enter your email',
+    subBtn: 'Subscribe',
+    subSuccess: 'Success! Thank you for subscribing 🌿',
+    contact: 'Contact',
+    address: 'Jl. Pendidikan No. 1, South Jakarta, DKI Jakarta',
+    email: 'hello@baduyedu.id',
+    phone: '+62 21 1234 5678',
+    rights: '© 2026 BaduyEdu. All Rights Reserved.',
+    madeWith: 'Made with ❤️ for OLIVIA Competition 2026',
+  },
+};
+
+export function Footer({ lang }: Props) {
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+  const tx = t[lang];
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email.trim()) {
+      setSubscribed(true);
+      setEmail('');
+    }
+  };
+
+  return (
+    <footer className="bg-foreground text-background">
+      {/* Subscribe Banner */}
+      <div className="border-b border-background/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="grid md:grid-cols-2 gap-6 items-center">
+            <div>
+              <h3 className="text-background mb-1">{tx.subscribe}</h3>
+              <p className="text-background/60 text-sm">{tx.subDesc}</p>
+            </div>
+            {subscribed ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center gap-2 text-primary text-sm font-semibold"
+              >
+                <CheckCircle className="w-5 h-5" />
+                {tx.subSuccess}
+              </motion.div>
+            ) : (
+              <form onSubmit={handleSubscribe} className="flex gap-2">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder={tx.subPlaceholder}
+                  required
+                  className="flex-1 px-4 py-3 rounded-xl bg-background/10 border border-background/20 text-background placeholder:text-background/40 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                />
+                <button
+                  type="submit"
+                  className="px-6 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity flex-shrink-0"
+                >
+                  {tx.subBtn}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Main Footer */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+          {/* Brand */}
+          <div className="col-span-2 lg:col-span-2">
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
+                <Leaf className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <div>
+                <div style={{ fontFamily: 'Playfair Display, serif', fontWeight: 700 }} className="text-background text-base">
+                  Baduy<span className="text-primary">Edu</span>
+                </div>
+                <div className="text-background/40 text-[10px] tracking-widest uppercase">OLIVIA 2026</div>
+              </div>
+            </div>
+            <p className="text-background/60 text-sm leading-relaxed mb-5 max-w-xs">{tx.tagline}</p>
+            {/* Social */}
+            <div className="flex gap-3">
+              {[
+                { icon: Instagram, label: 'Instagram' },
+                { icon: Twitter, label: 'Twitter' },
+                { icon: Youtube, label: 'YouTube' },
+                { icon: Github, label: 'GitHub' },
+              ].map(({ icon: Icon, label }) => (
+                <button
+                  key={label}
+                  aria-label={label}
+                  className="w-9 h-9 rounded-full bg-background/10 flex items-center justify-center text-background/60 hover:bg-primary hover:text-primary-foreground transition-all"
+                >
+                  <Icon className="w-4 h-4" />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Explore Links */}
+          <div>
+            <div className="text-background text-sm font-semibold mb-4">{tx.explore}</div>
+            <ul className="space-y-2.5">
+              {tx.links1.map((label, i) => (
+                <li key={i}>
+                  <a
+                    href={tx.hrefs1[i]}
+                    className="text-background/55 text-sm hover:text-primary transition-colors"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* About Links */}
+          <div>
+            <div className="text-background text-sm font-semibold mb-4">{tx.about}</div>
+            <ul className="space-y-2.5">
+              {tx.links2.map((label) => (
+                <li key={label}>
+                  <a href="#" className="text-background/55 text-sm hover:text-primary transition-colors">{label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <div className="text-background text-sm font-semibold mb-4">{tx.contact}</div>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-2 text-background/55 text-sm">
+                <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5 text-primary" />
+                <span>{tx.address}</span>
+              </li>
+              <li className="flex items-center gap-2 text-background/55 text-sm">
+                <Mail className="w-4 h-4 flex-shrink-0 text-primary" />
+                <span>{tx.email}</span>
+              </li>
+              <li className="flex items-center gap-2 text-background/55 text-sm">
+                <Phone className="w-4 h-4 flex-shrink-0 text-primary" />
+                <span>{tx.phone}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="pt-6 border-t border-background/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-background/40 text-xs">{tx.rights}</p>
+          <p className="text-background/40 text-xs">{tx.madeWith}</p>
+          <div className="flex gap-4">
+            {tx.links3.map(label => (
+              <a key={label} href="#" className="text-background/40 text-xs hover:text-background/70 transition-colors">{label}</a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
