@@ -17,7 +17,7 @@ export default function App() {
         <Navbar isDark={isDark} setIsDark={setIsDark} lang={lang} setLang={setLang} />
         <main>
           <HeroSection lang={lang} />
-          <JelajahSection lang={lang} />
+          <JelajahSection lang={lang} isDark={isDark} />
           <TheLabSection lang={lang} />
           <EdukasiSection lang={lang} />
           <DonasiSection lang={lang} />

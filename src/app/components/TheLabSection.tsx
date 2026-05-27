@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Bot, Send, Upload, Headphones, Glasses, Cpu, Zap, Image, Mic, ChevronRight } from 'lucide-react';
+import { Bot, Send, Upload, Headphones, Glasses, Cpu, Zap, Image, Mic, ChevronRight, X, Sparkles, AlertCircle } from 'lucide-react';
+import * as THREE from 'three';
 
 interface Props { lang: 'id' | 'en' }
 
@@ -29,6 +30,12 @@ const vrScenes = [
   { id: 'ritual', name: 'Ritual Kawalu', nameEn: 'Kawalu Ritual', desc: 'Saksikan upacara sakral Kawalu yang hanya dilakukan setahun sekali', descEn: 'Witness the sacred Kawalu ceremony held only once a year', color: 'from-purple-800 to-purple-600', icon: '🙏' },
 ];
 
+const sceneImages: Record<string, string> = {
+  hutan: 'https://images.unsplash.com/photo-1511497584788-876760111969?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920&q=80',
+  kampung: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920&q=80',
+  ritual: 'https://images.unsplash.com/photo-1519817650390-64a93db51149?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920&q=80',
+};
+
 const t = {
   id: {
     title: 'The Lab',
@@ -50,6 +57,9 @@ const t = {
     active: 'Aktifkan AR',
     analyzing: 'Menganalisis...',
     detected: 'Terdeteksi: Kain Tenun Baduy Luar, Banten — Motif Poleng, simbol keseimbangan alam',
+    arHint: '💡 Klik tombol di bawah untuk mengaktifkan webcam asli kamu untuk simulasi pemindaian AR.',
+    arStop: 'Matikan AR',
+    arCamError: '⚠️ Kamera tidak dapat diakses (Akses ditolak atau perangkat tidak ada). Berjalan dalam mode simulasi.'
   },
   en: {
     title: 'The Lab',
@@ -71,10 +81,177 @@ const t = {
     active: 'Activate AR',
     analyzing: 'Analyzing...',
     detected: 'Detected: Baduy Luar Woven Fabric, Banten — Poleng motif, symbol of natural balance',
+    arHint: '💡 Click the button below to turn on your actual webcam for the AR scanning simulation.',
+    arStop: 'Deactivate AR',
+    arCamError: '⚠️ Camera cannot be accessed (Access denied or device missing). Running in simulated mode.'
   },
 };
 
 let msgId = 0;
+
+// Three.js VR 360 Viewer Modal Component
+interface VRModalProps {
+  sceneId: string;
+  onClose: () => void;
+  lang: 'id' | 'en';
+}
+
+function VRModal({ sceneId, onClose, lang }: VRModalProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    // 1. Setup Scene
+    const scene = new THREE.Scene();
+
+    // 2. Setup Camera
+    const width = containerRef.current.clientWidth;
+    const height = containerRef.current.clientHeight;
+    const camera = new THREE.PerspectiveCamera(75, width / height, 1, 1100);
+    camera.position.set(0, 0, 0);
+
+    // 3. Setup Renderer
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(width, height);
+    containerRef.current.appendChild(renderer.domElement);
+    rendererRef.current = renderer;
+
+    // 4. Create inverted Sphere Geometry
+    const geometry = new THREE.SphereGeometry(500, 60, 40);
+    geometry.scale(-1, 1, 1); // Flip sphere inside out
+
+    // 5. Load Texture
+    const texture = new THREE.TextureLoader().load(sceneImages[sceneId] || sceneImages.hutan);
+    const material = new THREE.MeshBasicMaterial({ map: texture });
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    // Variables for drag controls
+    let isUserInteracting = false;
+    let onPointerDownPointerX = 0;
+    let onPointerDownPointerY = 0;
+    let onPointerDownLon = 0;
+    let onPointerDownLat = 0;
+    let lon = 0;
+    let lat = 0;
+    let phi = 0;
+    let theta = 0;
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.isPrimary === false) return;
+      isUserInteracting = true;
+      onPointerDownPointerX = event.clientX;
+      onPointerDownPointerY = event.clientY;
+      onPointerDownLon = lon;
+      onPointerDownLat = lat;
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (event.isPrimary === false) return;
+      if (isUserInteracting === true) {
+        lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
+        lat = (event.clientY - onPointerDownPointerY) * 0.1 + onPointerDownLat;
+      }
+    };
+
+    const onPointerUp = (event: PointerEvent) => {
+      if (event.isPrimary === false) return;
+      isUserInteracting = false;
+    };
+
+    const container = containerRef.current;
+    container.addEventListener('pointerdown', onPointerDown);
+    container.addEventListener('pointermove', onPointerMove);
+    container.addEventListener('pointerup', onPointerUp);
+
+    // Handle Resize
+    const handleResize = () => {
+      if (!containerRef.current) return;
+      const w = containerRef.current.clientWidth;
+      const h = containerRef.current.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    };
+    window.addEventListener('resize', handleResize);
+
+    // Render loop
+    let animationFrameId: number;
+    const animate = () => {
+      animationFrameId = requestAnimationFrame(animate);
+
+      if (isUserInteracting === false) {
+        lon += 0.05; // Auto rotate slowly
+      }
+
+      lat = Math.max(-85, Math.min(85, lat));
+      phi = THREE.MathUtils.degToRad(90 - lat);
+      theta = THREE.MathUtils.degToRad(lon);
+
+      const x = 500 * Math.sin(phi) * Math.cos(theta);
+      const y = 500 * Math.cos(phi);
+      const z = 500 * Math.sin(phi) * Math.sin(theta);
+
+      camera.lookAt(x, y, z);
+      renderer.render(scene, camera);
+    };
+
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', handleResize);
+      if (container) {
+        container.removeEventListener('pointerdown', onPointerDown);
+        container.removeEventListener('pointermove', onPointerMove);
+        container.removeEventListener('pointerup', onPointerUp);
+      }
+      geometry.dispose();
+      material.dispose();
+      texture.dispose();
+      renderer.dispose();
+      if (containerRef.current && renderer.domElement) {
+        containerRef.current.removeChild(renderer.domElement);
+      }
+    };
+  }, [sceneId]);
+
+  return (
+    <div className="fixed inset-0 z-[2000] bg-black flex flex-col justify-between">
+      {/* Top Bar Overlay */}
+      <div className="absolute top-0 left-0 right-0 p-5 bg-gradient-to-b from-black/80 to-transparent z-[2001] flex items-center justify-between">
+        <div>
+          <h4 className="text-white text-base font-bold flex items-center gap-2">
+            <Headphones className="w-5 h-5 text-emerald-400" />
+            360° Virtual Reality Experience
+          </h4>
+          <p className="text-white/60 text-xs mt-0.5">
+            {lang === 'id' 
+              ? 'Tarik/Drag mouse untuk melihat sekeliling 360 derajat. Nikmati visualisasi imersif.' 
+              : 'Drag mouse to look around in 360 degrees. Enjoy the immersive visualization.'}
+          </p>
+        </div>
+        <button 
+          onClick={onClose}
+          className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer border border-white/10"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+      
+      {/* 3D Canvas wrapper */}
+      <div ref={containerRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+      
+      {/* Bottom Hint */}
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-[2001] bg-black/60 backdrop-blur border border-white/10 px-4 py-2 rounded-xl text-white/80 text-[10px] uppercase tracking-widest font-bold font-mono">
+        🖱️ Drag mouse to look around
+      </div>
+    </div>
+  );
+}
 
 export function TheLabSection({ lang }: Props) {
   const [messages, setMessages] = useState<Message[]>([
@@ -84,13 +261,61 @@ export function TheLabSection({ lang }: Props) {
   const [isTyping, setIsTyping] = useState(false);
   const [activeVr, setActiveVr] = useState<string | null>(null);
   const [imgState, setImgState] = useState<'idle' | 'analyzing' | 'done'>('idle');
+  
+  // AR states and refs
   const [arActive, setArActive] = useState(false);
+  const [arCamError, setArCamError] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   const chatEndRef = useRef<HTMLDivElement>(null);
   const tx = t[lang];
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
+
+  // Request/Stop webcam feed dynamically for AR Experience
+  useEffect(() => {
+    let activeStream: MediaStream | null = null;
+
+    if (arActive) {
+      setArCamError(false);
+      const constraints = { 
+        video: { 
+          facingMode: 'environment',
+          width: { ideal: 640 },
+          height: { ideal: 480 }
+        } 
+      };
+
+      navigator.mediaDevices.getUserMedia(constraints)
+        .then(mediaStream => {
+          activeStream = mediaStream;
+          if (videoRef.current) {
+            videoRef.current.srcObject = mediaStream;
+            videoRef.current.play().catch(e => {
+              console.warn("Video playback was interrupted or not allowed:", e);
+            });
+          }
+        })
+        .catch(err => {
+          console.error("Camera stream access failed:", err);
+          setArCamError(true);
+        });
+    }
+
+    return () => {
+      if (activeStream) {
+        activeStream.getTracks().forEach(track => {
+          try {
+            track.stop();
+          } catch (e) {
+            console.error("Error stopping video track:", e);
+          }
+        });
+      }
+    };
+  }, [arActive]);
 
   const sendMessage = () => {
     if (!input.trim()) return;
@@ -122,6 +347,7 @@ export function TheLabSection({ lang }: Props) {
   return (
     <section id="lab" className="py-20 bg-muted/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -129,7 +355,7 @@ export function TheLabSection({ lang }: Props) {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm mb-4 font-semibold">
             <Cpu className="w-4 h-4" />
             Advanced Technology
           </div>
@@ -221,7 +447,7 @@ export function TheLabSection({ lang }: Props) {
                 <button
                   onClick={sendMessage}
                   disabled={!input.trim()}
-                  className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
+                  className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40 cursor-pointer"
                 >
                   <Send className="w-4 h-4" />
                 </button>
@@ -243,59 +469,59 @@ export function TheLabSection({ lang }: Props) {
               </div>
               <p className="text-muted-foreground text-sm mb-4">{tx.vrSub}</p>
               <div className="grid gap-3">
-                {vrScenes.map(scene => (
-                  <motion.button
-                    key={scene.id}
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    onClick={() => setActiveVr(activeVr === scene.id ? null : scene.id)}
-                    className={`relative overflow-hidden rounded-2xl p-4 text-left transition-all border ${
-                      activeVr === scene.id ? 'border-primary ring-2 ring-primary/20' : 'border-border'
-                    }`}
-                  >
-                    <div className={`absolute inset-0 bg-gradient-to-r ${scene.color} opacity-15`} />
-                    <div className="relative flex items-center gap-3">
-                      <div className="text-2xl">{scene.icon}</div>
-                      <div className="flex-1">
-                        <div className="font-semibold text-foreground text-sm">{lang === 'id' ? scene.name : scene.nameEn}</div>
-                        <div className="text-muted-foreground text-xs mt-0.5">{lang === 'id' ? scene.desc : scene.descEn}</div>
-                      </div>
-                      <AnimatePresence>
-                        {activeVr === scene.id ? (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            exit={{ scale: 0 }}
-                            className="w-8 h-8 rounded-full bg-primary flex items-center justify-center"
-                          >
-                            <Zap className="w-4 h-4 text-primary-foreground" />
-                          </motion.div>
-                        ) : (
-                          <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                        )}
-                      </AnimatePresence>
-                    </div>
-                    {activeVr === scene.id && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        className="relative mt-3 pt-3 border-t border-border/50"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="flex-1 h-1 rounded-full bg-border overflow-hidden">
-                            <motion.div
-                              initial={{ width: '0%' }}
-                              animate={{ width: '100%' }}
-                              transition={{ duration: 2, ease: 'linear' }}
-                              className="h-full bg-primary rounded-full"
-                            />
-                          </div>
-                          <button className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold">{tx.enter}</button>
+                {vrScenes.map(scene => {
+                  const isActive = activeVr === scene.id;
+                  return (
+                    <motion.div
+                      key={scene.id}
+                      whileHover={{ scale: 1.01 }}
+                      className={`relative overflow-hidden rounded-2xl p-4 text-left transition-all border ${
+                        isActive ? 'border-primary ring-2 ring-primary/20' : 'border-border'
+                      }`}
+                    >
+                      <div className={`absolute inset-0 bg-gradient-to-r ${scene.color} opacity-15`} />
+                      <div className="relative flex items-center gap-3">
+                        <div className="text-2xl">{scene.icon}</div>
+                        <div className="flex-1">
+                          <div className="font-semibold text-foreground text-sm">{lang === 'id' ? scene.name : scene.nameEn}</div>
+                          <div className="text-muted-foreground text-xs mt-0.5">{lang === 'id' ? scene.desc : scene.descEn}</div>
                         </div>
-                      </motion.div>
-                    )}
-                  </motion.button>
-                ))}
+                        <button
+                          onClick={() => setActiveVr(isActive ? null : scene.id)}
+                          className="w-8 h-8 rounded-full bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground flex items-center justify-center transition-all cursor-pointer border border-primary/20"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </div>
+                      
+                      {/* Sub-activation to trigger Fullscreen VR Modal */}
+                      {isActive && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          className="relative mt-3 pt-3 border-t border-border/50"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="flex-1 h-1 rounded-full bg-border overflow-hidden">
+                              <motion.div
+                                initial={{ width: '0%' }}
+                                animate={{ width: '100%' }}
+                                transition={{ duration: 1.5, ease: 'linear' }}
+                                className="h-full bg-primary rounded-full"
+                              />
+                            </div>
+                            <button 
+                              onClick={() => {}} // ActiveVr state keeps it mounted, VRModal is triggered by separate rendering below
+                              className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold cursor-pointer shadow"
+                            >
+                              {tx.enter}
+                            </button>
+                          </div>
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  );
+                })}
               </div>
             </div>
           </motion.div>
@@ -303,7 +529,7 @@ export function TheLabSection({ lang }: Props) {
 
         {/* AR + Image Recognition */}
         <div className="grid md:grid-cols-2 gap-8">
-          {/* AR Experience */}
+          {/* AR Experience with actual Camera Feed */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -314,15 +540,27 @@ export function TheLabSection({ lang }: Props) {
               <Glasses className="w-5 h-5 text-sky-500" />
               <h3 className="text-foreground text-base">{tx.arTitle}</h3>
             </div>
-            <p className="text-muted-foreground text-sm mb-5">{tx.arDesc}</p>
+            <p className="text-muted-foreground text-xs leading-relaxed mb-4">{tx.arDesc}</p>
+            <div className="text-[11px] font-medium text-muted-foreground mb-4 bg-muted border border-border/40 p-2.5 rounded-xl">
+              {tx.arHint}
+            </div>
+
             <div
-              className="relative rounded-2xl overflow-hidden aspect-video flex items-center justify-center cursor-pointer group"
-              style={{ background: 'linear-gradient(135deg, #0D1B14 0%, #1B3A2C 100%)' }}
-              onClick={() => setArActive(!arActive)}
+              className="relative rounded-2xl overflow-hidden aspect-video flex items-center justify-center group border border-border bg-black"
             >
-              {/* AR overlay effect */}
-              <div className="absolute inset-0 opacity-20">
-                {/* Grid lines */}
+              {/* Actual Camera Stream background */}
+              {arActive && !arCamError && (
+                <video 
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  muted
+                  className="absolute inset-0 w-full h-full object-cover z-0"
+                />
+              )}
+
+              {/* Grid scanning effect overlay */}
+              <div className="absolute inset-0 opacity-20 z-10 pointer-events-none">
                 {[...Array(5)].map((_, i) => (
                   <div key={i} className="absolute border-t border-green-400/30" style={{ top: `${20 * (i + 1)}%`, left: 0, right: 0 }} />
                 ))}
@@ -331,10 +569,10 @@ export function TheLabSection({ lang }: Props) {
                 ))}
               </div>
 
-              {/* AR scanning animation */}
+              {/* Scanning lines */}
               {arActive && (
                 <motion.div
-                  className="absolute left-0 right-0 h-px bg-green-400 shadow-[0_0_10px_2px_rgba(74,222,128,0.6)]"
+                  className="absolute left-0 right-0 h-px bg-green-400 shadow-[0_0_10px_2px_rgba(74,222,128,0.6)] z-10"
                   animate={{ top: ['10%', '90%', '10%'] }}
                   transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
                 />
@@ -342,28 +580,48 @@ export function TheLabSection({ lang }: Props) {
 
               {/* Corner brackets */}
               {['top-4 left-4', 'top-4 right-4', 'bottom-4 left-4', 'bottom-4 right-4'].map((pos, i) => (
-                <div key={i} className={`absolute ${pos} w-6 h-6`}>
+                <div key={i} className={`absolute ${pos} w-6 h-6 z-10`}>
                   <div className={`absolute border-green-400 ${i < 2 ? 'top-0 border-t-2' : 'bottom-0 border-b-2'} ${i % 2 === 0 ? 'left-0 border-l-2' : 'right-0 border-r-2'} w-4 h-4`} />
                 </div>
               ))}
 
-              <div className="relative z-10 text-center">
+              {/* Camera Fallback simulated background */}
+              {arActive && arCamError && (
+                <div className="absolute inset-0 bg-gradient-to-br from-[#0D1B14] to-[#1B3A2C] flex items-center justify-center p-6 text-center z-0">
+                  <div className="text-[10px] text-rose-400 leading-normal flex flex-col items-center gap-1.5 font-semibold">
+                    <AlertCircle className="w-5 h-5 text-rose-500" />
+                    <span>{tx.arCamError}</span>
+                  </div>
+                </div>
+              )}
+
+              <div className="relative z-20 text-center bg-black/40 backdrop-blur-sm p-4 rounded-2xl border border-white/10 max-w-[80%]">
                 <Glasses className={`w-10 h-10 mx-auto mb-2 ${arActive ? 'text-green-400' : 'text-green-400/50'}`} />
-                <div className={`text-sm font-semibold ${arActive ? 'text-green-400' : 'text-green-400/50'}`}>
+                <div className={`text-xs font-extrabold ${arActive ? 'text-green-400' : 'text-green-400/50'}`}>
                   {arActive ? (lang === 'id' ? '📍 Mendeteksi lingkungan...' : '📍 Detecting environment...') : tx.active}
                 </div>
+                
                 {arActive && (
                   <motion.div
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.5 }}
-                    className="mt-3 px-3 py-2 rounded-lg bg-green-400/20 border border-green-400/30 text-green-400 text-xs max-w-xs"
+                    transition={{ delay: 1 }}
+                    className="mt-3 px-3 py-2 rounded-lg bg-green-400/20 border border-green-400/30 text-green-400 text-[10px] leading-normal font-mono"
                   >
                     💡 {lang === 'id' ? 'Terapkan prinsip Baduy: Kurangi penggunaan plastik — gunakan bahan alami' : 'Apply Baduy principle: Reduce plastic use — use natural materials'}
                   </motion.div>
                 )}
               </div>
             </div>
+            
+            <button
+              onClick={() => setArActive(!arActive)}
+              className={`w-full mt-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer text-center ${
+                arActive ? 'bg-rose-600 text-white hover:bg-rose-700' : 'bg-primary text-primary-foreground hover:opacity-90'
+              }`}
+            >
+              {arActive ? tx.arStop : tx.active}
+            </button>
           </motion.div>
 
           {/* AI Image Recognition */}
@@ -421,7 +679,7 @@ export function TheLabSection({ lang }: Props) {
                   </div>
                   <button
                     onClick={(e) => { e.stopPropagation(); setImgState('idle'); }}
-                    className="mt-3 text-xs text-muted-foreground hover:text-primary transition-colors underline"
+                    className="mt-3 text-xs text-muted-foreground hover:text-primary transition-colors underline cursor-pointer"
                   >
                     {lang === 'id' ? 'Upload foto lain' : 'Upload another'}
                   </button>
@@ -431,6 +689,17 @@ export function TheLabSection({ lang }: Props) {
           </motion.div>
         </div>
       </div>
+
+      {/* Render immersive WebGL 360° VR Modal sphere if active */}
+      <AnimatePresence>
+        {activeVr && (
+          <VRModal 
+            sceneId={activeVr} 
+            onClose={() => setActiveVr(null)}
+            lang={lang}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
