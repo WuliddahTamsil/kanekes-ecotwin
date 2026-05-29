@@ -11,22 +11,22 @@ const BOT_FOREST = 'https://images.unsplash.com/photo-1668086381578-241354528f87
 
 const mockAnswers: Record<string, { id: string; en: string }> = {
   listrik: {
-    id: 'Suku Baduy menolak listrik karena percaya bahwa teknologi modern akan merusak keseimbangan alam dan spiritualitas mereka. Hukum adat Pikukuh melarang penggunaan peralatan modern untuk menjaga kehidupan yang harmonis dengan alam.',
-    en: 'The Baduy tribe refuses electricity because they believe modern technology will disrupt the balance of nature and their spirituality. The customary law Pikukuh prohibits the use of modern equipment to maintain a harmonious life with nature.',
+    id: 'Terranesia memetakan ragam komunitas adat Nusantara yang menjaga keseimbangan alam, spiritualitas, dan teknologi secara bijak sesuai nilai lokal masing-masing.',
+    en: 'Terranesia maps diverse Nusantara indigenous communities that balance nature, spirituality, and technology through their own local values.',
   },
   hutan: {
-    id: 'Baduy menjaga hutan dengan konsep "leuweung kolot" atau hutan larangan. Area ini tidak boleh ditebang atau dimasuki sembarangan. Mereka percaya bahwa hutan adalah sumber kehidupan yang harus dilindungi.',
-    en: 'Baduy protects forests with the concept of "leuweung kolot" or forbidden forests. These areas cannot be cut down or entered carelessly. They believe that forests are a source of life that must be protected.',
+    id: 'Banyak komunitas Nusantara menjaga hutan melalui zona adat, hutan larangan, atau aturan konservasi lokal sebagai sumber kehidupan yang harus dilindungi.',
+    en: 'Many Nusantara communities protect forests through customary zones, sacred forests, or local conservation rules as life sources that must be preserved.',
   },
   default: {
-    id: 'Pertanyaan menarik! Suku Baduy memiliki filosofi hidup yang sangat dalam. Prinsip utama mereka adalah "Rawatan hidup" — menjaga keseimbangan antara manusia, alam, dan roh leluhur. Mereka percaya bahwa modernisasi berlebihan akan merusak harmoni ini.',
-    en: 'Great question! The Baduy tribe has a very deep life philosophy. Their main principle is "Rawatan hidup" — maintaining the balance between humans, nature, and ancestral spirits. They believe that excessive modernization will disrupt this harmony.',
+    id: 'Pertanyaan menarik! Komunitas adat Nusantara memiliki filosofi hidup yang sangat dalam. Prinsip utama mereka adalah "Rawatan hidup" — menjaga keseimbangan antara manusia, alam, dan roh leluhur. Mereka percaya bahwa modernisasi berlebihan akan merusak harmoni ini.',
+    en: 'Great question! Nusantara indigenous communities have very deep life philosophies. Their main principle is "Rawatan hidup" — maintaining the balance between humans, nature, and ancestral spirits. They believe that excessive modernization will disrupt this harmony.',
   },
 };
 
 const vrScenes = [
-  { id: 'hutan', name: 'Hutan Larangan', nameEn: 'Sacred Forest', desc: 'Jelajahi hutan sakral Baduy Dalam yang belum pernah dijamah teknologi', descEn: 'Explore the sacred forest of Baduy Dalam untouched by technology', color: 'from-green-800 to-green-600', icon: '🌳' },
-  { id: 'kampung', name: 'Kampung Baduy', nameEn: 'Baduy Village', desc: 'Kunjungi permukiman tradisional dengan rumah panggung khas Baduy', descEn: 'Visit traditional settlements with typical Baduy stilt houses', color: 'from-amber-800 to-amber-600', icon: '🏡' },
+  { id: 'hutan', name: 'Hutan Larangan', nameEn: 'Sacred Forest', desc: 'Jelajahi hutan adat Nusantara yang dijaga oleh aturan lokal', descEn: 'Explore Nusantara customary forests protected by local rules', color: 'from-green-800 to-green-600', icon: '🌳' },
+  { id: 'kampung', name: 'Kampung Budaya', nameEn: 'Cultural Village', desc: 'Kunjungi permukiman tradisional dengan rumah tradisional Nusantara', descEn: 'Visit traditional settlements with Nusantara traditional houses', color: 'from-amber-800 to-amber-600', icon: '🏡' },
   { id: 'ritual', name: 'Ritual Kawalu', nameEn: 'Kawalu Ritual', desc: 'Saksikan upacara sakral Kawalu yang hanya dilakukan setahun sekali', descEn: 'Witness the sacred Kawalu ceremony held only once a year', color: 'from-purple-800 to-purple-600', icon: '🙏' },
 ];
 
@@ -41,14 +41,14 @@ const t = {
     title: 'The Lab',
     sub: 'Teknologi canggih untuk pengalaman belajar yang lebih dalam',
     chatTitle: 'AI Chatbot Budaya',
-    chatSub: 'Tanya apa saja tentang budaya Baduy',
-    chatPlaceholder: 'Contoh: Kenapa Baduy tidak pakai listrik?',
+    chatSub: 'Tanya apa saja tentang budaya Nusantara',
+    chatPlaceholder: 'Contoh: Bagaimana adat menjaga hutan?',
     chatSend: 'Kirim',
     vrTitle: 'Virtual Reality Tour',
-    vrSub: 'Masuk ke dunia Baduy tanpa meninggalkan tempat duduk',
+    vrSub: 'Masuk ke dunia budaya Nusantara tanpa meninggalkan tempat duduk',
     arTitle: 'AR Experience',
-    arSub: 'Scan lingkungan sekitar dan temukan prinsip Baduy di dunia nyata',
-    arDesc: 'Arahkan kamera ke lingkungan sekitar Anda. AI akan menganalisis dan memberikan insight tentang cara menerapkan prinsip Baduy.',
+    arSub: 'Scan lingkungan sekitar dan temukan prinsip Terranesia di dunia nyata',
+    arDesc: 'Arahkan kamera ke lingkungan sekitar Anda. AI akan menganalisis dan memberikan insight tentang cara menerapkan prinsip Terranesia.',
     imgTitle: 'AI Image Recognition',
     imgSub: 'Upload foto untuk identifikasi budaya dan asal daerah',
     imgBtn: 'Upload Foto',
@@ -56,7 +56,7 @@ const t = {
     enter: 'Masuk ke VR',
     active: 'Aktifkan AR',
     analyzing: 'Menganalisis...',
-    detected: 'Terdeteksi: Kain Tenun Baduy Luar, Banten — Motif Poleng, simbol keseimbangan alam',
+    detected: 'Terdeteksi: Kain Tenun Nusantara — Motif Poleng, simbol keseimbangan alam',
     arHint: '💡 Klik tombol di bawah untuk mengaktifkan webcam asli kamu untuk simulasi pemindaian AR.',
     arStop: 'Matikan AR',
     arCamError: '⚠️ Kamera tidak dapat diakses (Akses ditolak atau perangkat tidak ada). Berjalan dalam mode simulasi.'
@@ -65,14 +65,14 @@ const t = {
     title: 'The Lab',
     sub: 'Advanced technology for a deeper learning experience',
     chatTitle: 'Cultural AI Chatbot',
-    chatSub: 'Ask anything about Baduy culture',
-    chatPlaceholder: 'Example: Why doesn\'t Baduy use electricity?',
+    chatSub: 'Ask anything about Nusantara culture',
+    chatPlaceholder: 'Example: How do customs protect forests?',
     chatSend: 'Send',
     vrTitle: 'Virtual Reality Tour',
-    vrSub: 'Enter the world of Baduy without leaving your seat',
+    vrSub: 'Enter the world of Nusantara culture without leaving your seat',
     arTitle: 'AR Experience',
-    arSub: 'Scan your surroundings and discover Baduy principles in the real world',
-    arDesc: 'Point your camera at your surroundings. AI will analyze and provide insights on how to apply Baduy principles.',
+    arSub: 'Scan your surroundings and discover Terranesia principles in the real world',
+    arDesc: 'Point your camera at your surroundings. AI will analyze and provide insights on how to apply Terranesia principles.',
     imgTitle: 'AI Image Recognition',
     imgSub: 'Upload a photo to identify culture and region of origin',
     imgBtn: 'Upload Photo',
@@ -80,7 +80,7 @@ const t = {
     enter: 'Enter VR',
     active: 'Activate AR',
     analyzing: 'Analyzing...',
-    detected: 'Detected: Baduy Luar Woven Fabric, Banten — Poleng motif, symbol of natural balance',
+    detected: 'Detected: Nusantara Woven Fabric — Poleng motif, symbol of natural balance',
     arHint: '💡 Click the button below to turn on your actual webcam for the AR scanning simulation.',
     arStop: 'Deactivate AR',
     arCamError: '⚠️ Camera cannot be accessed (Access denied or device missing). Running in simulated mode.'
@@ -255,7 +255,7 @@ function VRModal({ sceneId, onClose, lang }: VRModalProps) {
 
 export function TheLabSection({ lang }: Props) {
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'bot', text: lang === 'id' ? 'Halo! Saya AI Asisten Budaya Baduy. Silakan tanyakan apa saja tentang kearifan lokal Suku Baduy 🌿' : 'Hello! I\'m the Baduy Cultural AI Assistant. Feel free to ask anything about the local wisdom of the Baduy Tribe 🌿', id: ++msgId },
+    { role: 'bot', text: lang === 'id' ? 'Halo! Saya AI Asisten Budaya Terranesia. Silakan tanyakan apa saja tentang kearifan lokal Nusantara.' : 'Hello! I\'m the Terranesia Cultural AI Assistant. Feel free to ask anything about Nusantara local wisdom.', id: ++msgId },
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -608,7 +608,7 @@ export function TheLabSection({ lang }: Props) {
                     transition={{ delay: 1 }}
                     className="mt-3 px-3 py-2 rounded-lg bg-green-400/20 border border-green-400/30 text-green-400 text-[10px] leading-normal font-mono"
                   >
-                    💡 {lang === 'id' ? 'Terapkan prinsip Baduy: Kurangi penggunaan plastik — gunakan bahan alami' : 'Apply Baduy principle: Reduce plastic use — use natural materials'}
+                    💡 {lang === 'id' ? 'Terapkan prinsip Terranesia: Kurangi penggunaan plastik — gunakan bahan alami' : 'Apply Terranesia principle: Reduce plastic use — use natural materials'}
                   </motion.div>
                 )}
               </div>
@@ -703,3 +703,6 @@ export function TheLabSection({ lang }: Props) {
     </section>
   );
 }
+
+
+

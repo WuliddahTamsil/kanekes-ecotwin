@@ -8,8 +8,8 @@ const QRIS_PLACEHOLDER = 'https://images.unsplash.com/photo-1558520845-e80332dda
 
 const t = {
   id: {
-    title: 'Donasi untuk Baduy',
-    sub: 'Setiap kontribusi Anda membantu melestarikan budaya dan alam Baduy untuk generasi mendatang',
+    title: 'Donasi untuk Terranesia',
+    sub: 'Setiap kontribusi Anda membantu melestarikan budaya dan alam Nusantara untuk generasi mendatang',
     target: 'Target Dana',
     collected: 'Terkumpul',
     donors: 'Donatur',
@@ -21,8 +21,8 @@ const t = {
     or: 'atau',
     impact: 'Dampak Donasi Anda',
     items: [
-      { icon: '📚', title: 'Beasiswa Anak Baduy', desc: 'Rp 50.000 dapat mendukung pendidikan 1 anak selama 1 bulan' },
-      { icon: '🌳', title: 'Penanaman Pohon', desc: 'Rp 20.000 dapat menanam 1 pohon di hutan Baduy' },
+      { icon: '📚', title: 'Beasiswa Anak Budaya', desc: 'Rp 50.000 dapat mendukung pendidikan 1 anak selama 1 bulan' },
+      { icon: '🌳', title: 'Penanaman Pohon', desc: 'Rp 20.000 dapat menanam 1 pohon di wilayah konservasi budaya' },
       { icon: '🏠', title: 'Renovasi Rumah Adat', desc: 'Rp 500.000 berkontribusi pada renovasi 1 rumah tradisional' },
     ],
     transparency: 'Transparansi Penggunaan Dana',
@@ -34,8 +34,8 @@ const t = {
     btnDonate: 'Donasi Sekarang',
   },
   en: {
-    title: 'Donate for Baduy',
-    sub: 'Every contribution helps preserve Baduy culture and nature for future generations',
+    title: 'Donate for Terranesia',
+    sub: 'Every contribution helps preserve Nusantara culture and nature for future generations',
     target: 'Target Fund',
     collected: 'Collected',
     donors: 'Donors',
@@ -47,8 +47,8 @@ const t = {
     or: 'or',
     impact: 'Impact of Your Donation',
     items: [
-      { icon: '📚', title: 'Baduy Children Scholarship', desc: 'IDR 50,000 can support 1 child\'s education for 1 month' },
-      { icon: '🌳', title: 'Tree Planting', desc: 'IDR 20,000 can plant 1 tree in Baduy forest' },
+      { icon: '📚', title: 'Cultural Children Scholarship', desc: 'IDR 50,000 can support 1 child\'s education for 1 month' },
+      { icon: '🌳', title: 'Tree Planting', desc: 'IDR 20,000 can plant 1 tree in cultural conservation area' },
       { icon: '🏠', title: 'Traditional House Renovation', desc: 'IDR 500,000 contributes to renovating 1 traditional house' },
     ],
     transparency: 'Fund Usage Transparency',

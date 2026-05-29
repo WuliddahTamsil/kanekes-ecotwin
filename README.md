@@ -1,7 +1,7 @@
 
-  # Buat Tampilan Web
+  # Terranesia
 
-  This is a code bundle for Buat Tampilan Web. The original project is available at https://www.figma.com/design/hKRk815zU6HSmFoWLc8zBO/Buat-Tampilan-Web.
+  Terranesia is an interactive cultural learning platform for exploring Indonesian heritage through Web GIS, AI, AR/VR, and educational experiences.
 
   ## Running the code
 

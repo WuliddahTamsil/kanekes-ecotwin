@@ -1,18 +1,23 @@
-import { useMemo, useState } from 'react';
+import { type CSSProperties, type Dispatch, type SetStateAction, useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import {
   Award,
   BookOpen,
   Brain,
   ChevronRight,
+  Clock,
   Flame,
+  Gamepad2,
   Leaf,
   MapPin,
+  Play,
   RefreshCw,
   Search,
+  Ship,
   Sparkles,
   Target,
   Trophy,
+  Volume2,
   X,
 } from 'lucide-react';
 
@@ -35,6 +40,15 @@ interface CultureCard {
   wisdom: string;
   education: string;
   trending?: boolean;
+}
+
+interface CultureStoryContent {
+  ecoWisdom: string;
+  artIdentity: string;
+  trivia: string;
+  timeline: Array<{ era: string; text: string }>;
+  glossary: Array<{ term: string; meaning: string; pronunciation?: string }>;
+  challenge: string;
 }
 
 const translations = {
@@ -823,6 +837,199 @@ const cultureCards: CultureCard[] = [
 const regions: Array<'Semua Pulau' | Region> = ['Semua Pulau', 'Sumatera', 'Pulau Jawa', 'Kalimantan', 'Sulawesi', 'Bali & Nusa Tenggara', 'Maluku', 'Papua'];
 const categories: Array<'Semua Kategori' | Category> = ['Semua Kategori', 'Tradisional', 'Maritim', 'Pegunungan', 'Ritual', 'Urban / Akulturasi'];
 
+const cultureStoryOverrides: Record<string, Partial<CultureStoryContent>> = {
+  aceh: {
+    ecoWisdom: 'Aceh memiliki tradisi Panglima Laot, lembaga adat laut yang mengatur hari pantang melaut, penyelesaian sengketa nelayan, dan cara menangkap ikan agar ekosistem pesisir tetap pulih. Di darat, identitas kampung, meunasah, dan hutan lindung membentuk etika menjaga ruang hidup bersama.',
+    artIdentity: 'Tari Saman adalah bahasa tubuh kolektif: tepuk tangan, dada, dan paha bergerak cepat seperti gelombang. Busana hitam-emas dan pola Gayo menegaskan disiplin, doa, dan kebersamaan yang ritmis.',
+    trivia: 'Gerak Saman bisa terlihat seperti animasi gelombang karena puluhan penari menjaga tempo, napas, dan formasi secara presisi.',
+    timeline: [
+      { era: 'Samudera Pasai', text: 'Aceh menjadi salah satu gerbang perdagangan dan penyebaran Islam melalui pelabuhan, ulama, dan jalur rempah.' },
+      { era: 'Kesultanan Aceh', text: 'Jaringan diplomasi, pendidikan Islam, dan perdagangan memperkuat posisi Aceh di kawasan Samudra Hindia.' },
+      { era: 'Panglima Laot', text: 'Aturan adat laut menjaga relasi nelayan, musim, wilayah tangkap, dan keberlanjutan ekosistem pesisir.' },
+      { era: 'Kini', text: 'Tari Saman, meugang, dan adat musyawarah menjadi identitas yang tetap relevan untuk edukasi budaya dan sustainability.' },
+    ],
+    glossary: [
+      { term: 'Saman', meaning: 'Tari kolektif Gayo yang menekankan tempo, kekompakan, syair, dan gerak tangan.', pronunciation: 'sa-man' },
+      { term: 'Panglima Laot', meaning: 'Pemimpin adat laut Aceh yang mengatur etika melaut dan penyelesaian sengketa nelayan.' },
+      { term: 'Meugang', meaning: 'Tradisi makan bersama menjelang Ramadan atau hari besar sebagai simbol berbagi dan solidaritas.' },
+    ],
+    challenge: 'Coba prinsip Panglima Laot versi harian: ambil secukupnya dari alam. Hari ini, pilih makanan laut atau produk alam yang asalnya lebih bertanggung jawab.',
+  },
+  baduy: {
+    ecoWisdom: 'Baduy menjaga hulu air melalui aturan Leuweung Tutupan dan Leuweung Titipan. Tanah tidak boleh diubah sembarangan, bahan kimia dan sabun dibatasi di sungai, dan perjalanan dilakukan dengan berjalan kaki agar jejak ekologis tetap rendah.',
+    artIdentity: 'Kain tenun Baduy memakai warna sederhana seperti putih, hitam, dan biru tua. Kesederhanaan warna bukan kemiskinan visual, tetapi simbol keteguhan adat, batas diri, dan kedekatan dengan alam.',
+    trivia: 'Bagi Baduy, sungai bukan sekadar sumber air. Sungai adalah ruang hidup bersama yang harus tetap bersih karena mengalir ke banyak wilayah di hilir.',
+    timeline: [
+      { era: 'Masa adat', text: 'Pikukuh menjadi pedoman hidup yang mengatur hubungan manusia, tanah, hutan, dan air.' },
+      { era: 'Kini', text: 'Baduy menjadi contoh kuat bahwa konservasi bisa berjalan lewat aturan budaya, bukan hanya teknologi modern.' },
+    ],
+    glossary: [
+      { term: 'Pikukuh', meaning: 'Aturan adat yang menjaga keseimbangan hidup dan lingkungan.', pronunciation: 'pi-ku-kuh' },
+      { term: 'Leuweung', meaning: 'Hutan dalam bahasa Sunda; dalam konteks adat berarti ruang alam yang dijaga.' },
+    ],
+    challenge: 'Hari ini, kurangi sabun atau bahan kimia yang langsung masuk saluran air. Mulai dari satu kebiasaan kecil: pilih pembersih ramah lingkungan atau hemat pemakaian air.',
+  },
+  dayak: {
+    ecoWisdom: 'Dalam banyak komunitas Dayak, hutan adat dipahami sebagai ruang hidup, obat, pangan, dan identitas. Konsep seperti Tana Ulen mengenal wilayah hutan yang dilindungi dan hanya boleh diambil hasilnya dengan aturan adat.',
+    artIdentity: 'Rumah panjang bukan hanya arsitektur besar, tetapi simbol berbagi ruang, berbagi kerja, dan keamanan kolektif. Ukiran, mandau, tato, dan motif burung enggang sering membawa pesan keberanian serta hubungan manusia dengan alam.',
+    trivia: 'Rumah panjang dapat menampung banyak keluarga, sehingga kehidupan sosialnya melatih musyawarah setiap hari.',
+    timeline: [
+      { era: 'Sungai & hutan', text: 'Permukiman berkembang mengikuti jalur sungai sebagai jalan utama, sumber pangan, dan penghubung komunitas.' },
+      { era: 'Rumah panjang', text: 'Arsitektur komunal menjadi pusat adat, ritual, dan solidaritas.' },
+      { era: 'Konservasi kini', text: 'Narasi hutan adat makin penting dalam diskusi iklim dan hak masyarakat adat.' },
+    ],
+    glossary: [
+      { term: 'Tana Ulen', meaning: 'Wilayah hutan adat yang dijaga dan dimanfaatkan dengan izin adat.' },
+      { term: 'Rumah Betang', meaning: 'Rumah panjang komunal pada sejumlah masyarakat Dayak.' },
+    ],
+    challenge: 'Pilih satu produk harian dan cari tahu asal bahan alamnya. Tantangannya: dukung produk yang tidak merusak hutan.',
+  },
+  minangkabau: {
+    ecoWisdom: 'Rumah Gadang menunjukkan adaptasi lokal pada alam Sumatra yang rawan gempa. Struktur kayu, pasak, dan tumpuan batu membantu bangunan lebih lentur menghadapi getaran.',
+    artIdentity: 'Atap gonjong Rumah Gadang menyerupai tanduk kerbau dan menjadi simbol identitas Minang. Sistem matrilineal membuat rumah bukan hanya tempat tinggal, tetapi pusat garis keluarga ibu.',
+    trivia: 'Teknologi tahan gempa lokal sudah dipraktikkan lama sebelum istilah desain resilien populer.',
+    timeline: [
+      { era: 'Adat nagari', text: 'Kehidupan sosial dibangun lewat nagari, musyawarah, dan peran keluarga besar.' },
+      { era: 'Merantau', text: 'Tradisi merantau memperluas jaringan ekonomi dan pengetahuan tanpa melepas akar adat.' },
+      { era: 'Kini', text: 'Rumah Gadang menjadi ikon budaya sekaligus pelajaran arsitektur adaptif.' },
+    ],
+    glossary: [
+      { term: 'Rumah Gadang', meaning: 'Rumah adat Minangkabau yang menjadi pusat keluarga besar.' },
+      { term: 'Gonjong', meaning: 'Bentuk atap runcing melengkung khas Rumah Gadang.' },
+    ],
+    challenge: 'Amati bangunan di sekitarmu. Apa satu fitur yang membuatnya lebih ramah iklim atau lebih aman dari bencana?',
+  },
+  bali: {
+    ecoWisdom: 'Subak adalah sistem irigasi, organisasi sosial, dan praktik spiritual sekaligus. Ia menjalankan Tri Hita Karana: harmoni manusia dengan Tuhan, sesama, dan alam.',
+    artIdentity: 'Upacara, pura, tari, dan tata ruang Bali menata hubungan manusia dengan lanskap. Sawah bertingkat bukan hanya produktif, tetapi juga menjadi arsip visual kerja kolektif.',
+    trivia: 'Subak diakui dunia karena menunjukkan bahwa pengelolaan air bisa berbasis komunitas dan nilai spiritual.',
+    timeline: [
+      { era: 'Pertanian air', text: 'Komunitas mengelola air sawah lewat kesepakatan dan ritual bersama.' },
+      { era: 'Tri Hita Karana', text: 'Filosofi harmoni menjadi dasar relasi sosial dan ekologis.' },
+      { era: 'Warisan dunia', text: 'Subak menjadi contoh budaya air yang relevan untuk sustainability modern.' },
+    ],
+    glossary: [
+      { term: 'Subak', meaning: 'Sistem irigasi dan organisasi petani berbasis adat di Bali.' },
+      { term: 'Tri Hita Karana', meaning: 'Filosofi harmoni antara manusia, Tuhan, sesama, dan alam.' },
+    ],
+    challenge: 'Cek penggunaan air hari ini. Kurangi satu kebiasaan boros air, lalu catat dampaknya.',
+  },
+  kei: {
+    ecoWisdom: 'Masyarakat Kei mengenal hukum adat Larvul Ngabal, sementara tradisi Maluku juga kuat dengan Sasi: larangan mengambil hasil laut atau darat pada waktu tertentu agar ekosistem pulih.',
+    artIdentity: 'Identitas Kei tumbuh dari laut, perahu, relasi keluarga, dan hukum adat. Budaya maritimnya menekankan rasa adil karena kehidupan pulau sangat bergantung pada sumber daya bersama.',
+    trivia: 'Sasi adalah contoh sustainable harvesting lokal: mengambil secukupnya, lalu memberi waktu alam memulihkan diri.',
+    timeline: [
+      { era: 'Kepulauan', text: 'Laut menjadi penghubung keluarga, pasar, dan aturan hidup.' },
+      { era: 'Larvul Ngabal', text: 'Hukum adat menguatkan batas, keadilan, dan tanggung jawab sosial.' },
+      { era: 'Sasi', text: 'Praktik jeda panen menjaga stok alam tetap berkelanjutan.' },
+    ],
+    glossary: [
+      { term: 'Larvul Ngabal', meaning: 'Hukum adat masyarakat Kei yang mengatur martabat dan keadilan sosial.' },
+      { term: 'Sasi', meaning: 'Larangan adat mengambil hasil alam dalam periode tertentu.' },
+    ],
+    challenge: 'Coba prinsip jeda panen versi rumah: habiskan stok makanan yang ada sebelum membeli baru agar limbah berkurang.',
+  },
+  ambon: {
+    ecoWisdom: 'Budaya pesisir Ambon dekat dengan praktik jaga laut dan solidaritas antar-kampung. Nilai pela gandong dapat dibaca sebagai modal sosial untuk menjaga ruang hidup bersama.',
+    artIdentity: 'Musik Ambon menjadi identitas sosial yang menyatukan memori keluarga, gereja, kampung, dan laut. Harmoni vokal mencerminkan budaya yang kuat dalam rasa kebersamaan.',
+    trivia: 'Ambon dikenal sebagai kota musik karena tradisi bernyanyi hidup kuat di ruang keluarga dan komunitas.',
+    glossary: [
+      { term: 'Pela Gandong', meaning: 'Ikatan persaudaraan antar-kampung yang menekankan saling bantu dan damai.' },
+    ],
+    challenge: 'Bangun satu aksi gotong royong kecil: ajak teman memilah sampah atau membersihkan ruang bersama.',
+  },
+};
+
+function getCultureStory(card: CultureCard): CultureStoryContent {
+  const fallback: CultureStoryContent = {
+    ecoWisdom: `${card.wisdom} Dalam perspektif Terranesia, nilai ini dibaca sebagai cara komunitas menjaga batas pemakaian alam agar budaya dan lingkungan tetap hidup bersama.`,
+    artIdentity: `${card.tradition} Unsur seni, rumah, pakaian, tarian, atau simbol adat menjadi penanda identitas yang membuat cerita budaya mudah dikenali lintas generasi.`,
+    trivia: card.funFact,
+    timeline: [
+      { era: 'Akar budaya', text: card.history },
+      { era: 'Tradisi hidup', text: card.tradition },
+      { era: 'Relevansi kini', text: card.education },
+    ],
+    glossary: [
+      { term: card.culture, meaning: `Kata kunci untuk mengenali budaya ${card.name}.` },
+      { term: card.region, meaning: `Wilayah budaya utama ${card.name} dalam peta Terranesia.` },
+    ],
+    challenge: `Ambil satu nilai dari ${card.name}: ${card.wisdom} Terapkan dalam aksi kecil hari ini, misalnya hemat air, mengurangi sampah, atau memilih produk lokal.`,
+  };
+
+  return { ...fallback, ...cultureStoryOverrides[card.id] };
+}
+
+function getMotifStyle(card: CultureCard): CSSProperties {
+  const palette: Record<Region, string[]> = {
+    Sumatera: ['rgba(244, 162, 97, 0.24)', 'rgba(45, 106, 79, 0.22)'],
+    'Pulau Jawa': ['rgba(82, 183, 136, 0.24)', 'rgba(244, 162, 97, 0.2)'],
+    Kalimantan: ['rgba(16, 185, 129, 0.24)', 'rgba(6, 95, 70, 0.26)'],
+    Sulawesi: ['rgba(14, 165, 233, 0.22)', 'rgba(244, 162, 97, 0.2)'],
+    'Bali & Nusa Tenggara': ['rgba(251, 191, 36, 0.22)', 'rgba(239, 68, 68, 0.18)'],
+    Maluku: ['rgba(56, 189, 248, 0.24)', 'rgba(15, 118, 110, 0.2)'],
+    Papua: ['rgba(168, 85, 247, 0.2)', 'rgba(34, 197, 94, 0.2)'],
+  };
+  const [primary, secondary] = palette[card.region];
+
+  return {
+    backgroundImage: `
+      radial-gradient(circle at 18px 18px, ${primary} 0 2px, transparent 2px),
+      linear-gradient(135deg, transparent 0 42%, ${secondary} 42% 46%, transparent 46% 100%),
+      linear-gradient(45deg, transparent 0 44%, ${primary} 44% 48%, transparent 48% 100%)
+    `,
+    backgroundSize: '34px 34px, 42px 42px, 42px 42px',
+  };
+}
+
+function getRegionRadarPosition(region: Region) {
+  const positions: Record<Region, { left: string; top: string }> = {
+    Sumatera: { left: '18%', top: '43%' },
+    'Pulau Jawa': { left: '35%', top: '65%' },
+    Kalimantan: { left: '44%', top: '38%' },
+    Sulawesi: { left: '59%', top: '47%' },
+    'Bali & Nusa Tenggara': { left: '55%', top: '68%' },
+    Maluku: { left: '72%', top: '52%' },
+    Papua: { left: '86%', top: '55%' },
+  };
+
+  return positions[region];
+}
+
+function getEcoScores(card: CultureCard) {
+  if (card.id === 'aceh') {
+    return [
+      { label: 'Ecology', value: 87, color: '#52B788' },
+      { label: 'Custom', value: 91, color: '#F4A261' },
+      { label: 'Spirit', value: 92, color: '#38BDF8' },
+    ];
+  }
+
+  const regionBoost = card.region === 'Kalimantan' || card.region === 'Papua' ? 5 : card.category === 'Maritim' ? 3 : 0;
+  const ecological = Math.min(98, 84 + regionBoost + (card.trending ? 3 : 0));
+  const custom = Math.min(98, 82 + (card.category === 'Tradisional' || card.category === 'Ritual' ? 9 : 4));
+  const spiritual = Math.min(98, 80 + (card.category === 'Ritual' ? 12 : card.category === 'Maritim' ? 7 : 5));
+
+  return [
+    { label: 'Ecology', value: ecological, color: '#52B788' },
+    { label: 'Custom', value: custom, color: '#F4A261' },
+    { label: 'Spirit', value: spiritual, color: '#38BDF8' },
+  ];
+}
+
+function handleCardTilt(event: React.MouseEvent<HTMLButtonElement>) {
+  const rect = event.currentTarget.getBoundingClientRect();
+  const x = ((event.clientX - rect.left) / rect.width - 0.5) * 12;
+  const y = ((event.clientY - rect.top) / rect.height - 0.5) * -12;
+  event.currentTarget.style.setProperty('--tilt-x', `${y.toFixed(2)}deg`);
+  event.currentTarget.style.setProperty('--tilt-y', `${x.toFixed(2)}deg`);
+}
+
+function resetCardTilt(event: React.MouseEvent<HTMLButtonElement>) {
+  event.currentTarget.style.setProperty('--tilt-x', '0deg');
+  event.currentTarget.style.setProperty('--tilt-y', '0deg');
+}
+
 function getCultureOfTheDay() {
   const dayIndex = Math.floor(Date.now() / 86_400_000) % cultureCards.length;
   return cultureCards[dayIndex];
@@ -837,6 +1044,9 @@ export function HistoryCultureSection({ lang }: Props) {
   const [viewedIds, setViewedIds] = useState<string[]>([]);
   const [randomFactIndex, setRandomFactIndex] = useState(0);
   const [quizAnswer, setQuizAnswer] = useState('');
+  const [ecoSlider, setEcoSlider] = useState(58);
+  const [rhythmScore, setRhythmScore] = useState(62);
+  const [vrOpen, setVrOpen] = useState(false);
 
   const cultureOfDay = useMemo(getCultureOfTheDay, []);
   const trendingCards = useMemo(() => cultureCards.filter((card) => card.trending).slice(0, 6), []);
@@ -868,6 +1078,14 @@ export function HistoryCultureSection({ lang }: Props) {
     setSelectedCard(card);
     setViewedIds((current) => (current.includes(card.id) ? current : [...current, card.id]));
     setQuizAnswer('');
+    setEcoSlider(58);
+    setRhythmScore(card.id === 'aceh' ? 62 : rhythmScore);
+    setVrOpen(false);
+  };
+
+  const closeStoryMode = () => {
+    setSelectedCard(null);
+    setVrOpen(false);
   };
 
   const showRandomCulture = () => {
@@ -879,6 +1097,21 @@ export function HistoryCultureSection({ lang }: Props) {
   const nextRandomFact = () => {
     setRandomFactIndex((current) => (current + 7) % cultureCards.length);
   };
+
+  const selectedStory = selectedCard ? getCultureStory(selectedCard) : null;
+
+  useEffect(() => {
+    if (selectedCard?.id !== 'aceh') return undefined;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (['a', 's', 'd', 'f'].includes(event.key.toLowerCase())) {
+        setRhythmScore((current) => Math.min(100, current + 3));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedCard?.id]);
 
   return (
     <section id="historyculture" className="relative py-24 px-4 sm:px-6 lg:px-8">
@@ -1020,14 +1253,20 @@ export function HistoryCultureSection({ lang }: Props) {
           {filteredCards.map((card) => (
             <motion.button
               key={card.id}
+              layoutId={`culture-card-${card.id}`}
               onClick={() => openCard(card)}
-              whileHover={{ y: -6, scale: 1.01 }}
-              whileTap={{ scale: 0.98 }}
-              className="group overflow-hidden rounded-2xl border border-border bg-card text-left shadow-lg transition-all hover:border-primary/50 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary/30"
+              onMouseMove={handleCardTilt}
+              onMouseLeave={resetCardTilt}
+              style={{ transform: 'perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg))' }}
+              className="group relative overflow-hidden rounded-2xl border border-border bg-card text-left shadow-lg transition-all duration-300 hover:border-primary/50 hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-primary/30"
             >
               <div className="relative h-56 overflow-hidden">
-                <img src={card.image} alt={card.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-card/95 via-card/20 to-transparent" />
+                <motion.img layoutId={`culture-image-${card.id}`} src={card.image} alt={card.name} className="h-full w-full object-cover grayscale-[20%] sepia-[18%] transition duration-700 group-hover:scale-110 group-hover:grayscale-0 group-hover:sepia-0" />
+                <div className="absolute inset-0 bg-gradient-to-t from-card/95 via-card/35 to-black/10 transition duration-500 group-hover:from-card/90 group-hover:via-card/15" />
+                <div
+                  className="absolute inset-x-0 bottom-0 h-32 translate-y-16 opacity-0 mix-blend-screen transition duration-500 group-hover:translate-y-0 group-hover:opacity-100"
+                  style={getMotifStyle(card)}
+                />
                 <div className="absolute left-4 top-4 flex flex-wrap gap-2">
                   <span className="rounded-full bg-background/80 px-3 py-1 text-xs font-semibold text-primary backdrop-blur">
                     {card.category}
@@ -1052,8 +1291,13 @@ export function HistoryCultureSection({ lang }: Props) {
                   <span>{card.culture}</span>
                   <span className="shrink-0 rounded-full bg-primary/10 px-3 py-1 text-primary">{card.region}</span>
                 </div>
-                <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
-                  <ChevronRight className="h-3 w-3 text-primary" /> {tx.detail}
+                <div className="flex items-center justify-between gap-3">
+                  <p className="max-w-[13rem] translate-y-2 text-xs leading-relaxed text-muted-foreground opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                    {getCultureStory(card).artIdentity}
+                  </p>
+                  <div className="shrink-0 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-foreground transition group-hover:bg-primary group-hover:text-primary-foreground">
+                    <ChevronRight className="mr-1 inline h-3 w-3" /> Masuk Cerita
+                  </div>
                 </div>
               </div>
             </motion.button>
@@ -1068,13 +1312,13 @@ export function HistoryCultureSection({ lang }: Props) {
       </div>
 
       <AnimatePresence>
-        {selectedCard && (
+        {selectedCard && selectedStory && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 px-4 py-8 backdrop-blur-sm"
-            onClick={() => setSelectedCard(null)}
+            onClick={closeStoryMode}
           >
             <motion.div
               initial={{ y: 40, opacity: 0, scale: 0.98 }}
@@ -1084,7 +1328,7 @@ export function HistoryCultureSection({ lang }: Props) {
               onClick={(e) => e.stopPropagation()}
             >
               <button
-                onClick={() => setSelectedCard(null)}
+                onClick={closeStoryMode}
                 aria-label={tx.close}
                 className="absolute right-4 top-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card/85 text-foreground transition hover:bg-muted"
               >
@@ -1092,25 +1336,147 @@ export function HistoryCultureSection({ lang }: Props) {
               </button>
 
               <div className="max-h-[90vh] overflow-y-auto">
-                <div className="relative h-72 overflow-hidden">
-                  <img src={selectedCard.image} alt={selectedCard.name} className="h-full w-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/35 to-transparent" />
-                  <div className="absolute bottom-6 left-6 right-16">
-                    <div className="mb-3 flex flex-wrap gap-2">
-                      <span className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">{selectedCard.category}</span>
-                      <span className="rounded-full bg-background/80 px-3 py-1 text-xs font-semibold text-foreground backdrop-blur">{selectedCard.region}</span>
+                <div className="relative overflow-hidden border-b border-border bg-foreground text-background">
+                  <div className="absolute inset-0 opacity-25" style={getMotifStyle(selectedCard)} />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(82,183,136,0.3),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(244,162,97,0.22),transparent_28%)]" />
+                  {[0, 1, 2, 3, 4, 5].map((dot) => (
+                    <motion.span
+                      key={dot}
+                      className="absolute h-1.5 w-1.5 rounded-full bg-primary/70"
+                      style={{ left: `${12 + dot * 14}%`, top: `${18 + (dot % 3) * 18}%` }}
+                      animate={{ y: [0, -10, 0], opacity: [0.25, 0.8, 0.25] }}
+                      transition={{ duration: 3 + dot * 0.35, repeat: Infinity, ease: 'easeInOut' }}
+                    />
+                  ))}
+
+                  <div className="relative grid gap-0 lg:grid-cols-[1.25fr_0.85fr]">
+                    <div className="flex min-h-[24rem] flex-col justify-end px-6 pb-8 pt-24 sm:px-8">
+                      <div className="mb-4 flex flex-wrap gap-2">
+                        <span className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">{selectedCard.category}</span>
+                        <span className="rounded-full bg-background/15 px-3 py-1 text-xs font-semibold text-background backdrop-blur">{selectedCard.region}</span>
+                      </div>
+                      <motion.h3
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-4xl font-bold text-background sm:text-5xl"
+                      >
+                        {selectedCard.name}
+                      </motion.h3>
+                      <motion.p
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.08 }}
+                        className="mt-3 max-w-2xl text-sm leading-relaxed text-background/70"
+                      >
+                        {selectedCard.location} | {selectedCard.culture}
+                      </motion.p>
+
+                      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                        {getEcoScores(selectedCard).map((score) => (
+                          <EcoScoreWheel key={score.label} {...score} />
+                        ))}
+                      </div>
                     </div>
-                    <h3 className="text-3xl font-bold text-foreground">{selectedCard.name}</h3>
-                    <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{selectedCard.location} | {selectedCard.culture}</p>
+
+                    <div className="relative min-h-[24rem] overflow-hidden border-t border-background/10 lg:border-l lg:border-t-0">
+                      <motion.img layoutId={`culture-image-${selectedCard.id}`} src={selectedCard.image} alt={selectedCard.name} className="absolute inset-0 h-full w-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                      <MiniRadar region={selectedCard.region} location={selectedCard.location} />
+                      <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-white/20 bg-white/10 p-4 text-white backdrop-blur">
+                        <div className="mb-3 flex items-center justify-between gap-3">
+                          <div>
+                            <p className="text-xs uppercase tracking-wider text-white/60">Audio & Trivia</p>
+                            <p className="text-sm font-semibold">{selectedStory.glossary[0]?.term ?? selectedCard.culture}</p>
+                          </div>
+                          <AudioWaveform />
+                        </div>
+                        <p className="text-xs leading-relaxed text-white/70">{selectedStory.trivia}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
+                {selectedCard.id === 'aceh' && (
+                  <AcehLivingCanvas
+                    card={selectedCard}
+                    story={selectedStory}
+                    ecoSlider={ecoSlider}
+                    setEcoSlider={setEcoSlider}
+                    rhythmScore={rhythmScore}
+                    setRhythmScore={setRhythmScore}
+                    onLaunchVr={() => setVrOpen(true)}
+                  />
+                )}
+
                 <div className="grid gap-6 p-6 lg:grid-cols-[1.35fr_0.8fr]">
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <StoryBlock icon={<BookOpen className="h-4 w-4" />} title="Sejarah singkat" text={selectedCard.history} />
-                    <StoryBlock icon={<Sparkles className="h-4 w-4" />} title="Budaya & tradisi" text={selectedCard.tradition} />
-                    <StoryBlock icon={<Leaf className="h-4 w-4" />} title="Kearifan lokal" text={selectedCard.wisdom} />
-                    <StoryBlock icon={<Target className="h-4 w-4" />} title="Nilai edukasi" text={selectedCard.education} />
+                  <div className="space-y-5">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-primary">4-Pillars of Culture</p>
+                      <h4 className="mt-1 text-xl font-bold text-foreground">Story Mode {selectedCard.name}</h4>
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <StoryBlock icon={<BookOpen className="h-4 w-4" />} title="Asal-Usul & Sejarah" text={selectedCard.history} />
+                      <StoryBlock icon={<Leaf className="h-4 w-4" />} title="Kearifan Ekologis" text={selectedStory.ecoWisdom} />
+                      <StoryBlock icon={<Sparkles className="h-4 w-4" />} title="Seni & Simbolisme" text={selectedStory.artIdentity} />
+                      <StoryBlock icon={<Brain className="h-4 w-4" />} title="Did You Know?" text={selectedStory.trivia} />
+                    </div>
+
+                    <div className="overflow-hidden rounded-2xl border border-border bg-muted/30">
+                      <div className="grid lg:grid-cols-[1.1fr_0.9fr]">
+                        <div className="relative h-72 overflow-hidden">
+                          <img src={selectedCard.image} alt={`${selectedCard.name} eco comparison`} className="absolute inset-0 h-full w-full object-cover grayscale saturate-50" />
+                          <div className="absolute inset-0 bg-destructive/30" />
+                          <div className="absolute inset-y-0 left-0 overflow-hidden" style={{ width: `${ecoSlider}%` }}>
+                            <img src={selectedCard.image} alt="" className="h-full w-[42rem] max-w-none object-cover saturate-125" />
+                            <div className="absolute inset-0 bg-primary/15" />
+                          </div>
+                          <div className="absolute inset-y-0" style={{ left: `${ecoSlider}%` }}>
+                            <div className="-ml-px h-full w-0.5 bg-background shadow-lg" />
+                            <div className="absolute left-1/2 top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/70 bg-black/45 text-xs font-bold text-white backdrop-blur">
+                              {ecoSlider}
+                            </div>
+                          </div>
+                          <input
+                            type="range"
+                            min="25"
+                            max="82"
+                            value={ecoSlider}
+                            onChange={(event) => setEcoSlider(Number(event.target.value))}
+                            className="absolute inset-x-6 bottom-5 accent-primary"
+                            aria-label="Eco wisdom comparison slider"
+                          />
+                        </div>
+                        <div className="p-5">
+                          <p className="text-xs font-semibold uppercase tracking-wider text-primary">Interactive Eco-Wisdom</p>
+                          <h5 className="mt-2 text-lg font-bold text-foreground">Dari eksploitasi menuju ruang hidup yang dijaga</h5>
+                          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{selectedStory.ecoWisdom}</p>
+                          <div className="mt-4 grid grid-cols-3 gap-2">
+                            {getEcoScores(selectedCard).map((score) => (
+                              <div key={score.label} className="rounded-xl border border-border bg-card p-3 text-center">
+                                <div className="text-lg font-bold text-foreground">{score.value}%</div>
+                                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{score.label}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="rounded-2xl border border-border bg-muted/30 p-5">
+                      <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
+                        <Clock className="h-4 w-4 text-primary" />
+                        Timeline Sejarah
+                      </div>
+                      <div className="space-y-3">
+                        {selectedStory.timeline.map((item) => (
+                          <div key={`${selectedCard.id}-${item.era}`} className="grid gap-2 sm:grid-cols-[7rem_1fr]">
+                            <div className="text-xs font-semibold uppercase tracking-wider text-primary">{item.era}</div>
+                            <p className="border-l border-border pl-4 text-sm leading-relaxed text-muted-foreground">{item.text}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
                   <div className="space-y-4">
@@ -1120,6 +1486,34 @@ export function HistoryCultureSection({ lang }: Props) {
                         Fun Fact
                       </div>
                       <p className="text-sm leading-relaxed text-muted-foreground">{selectedCard.funFact}</p>
+                    </div>
+
+                    <div className="rounded-2xl border border-primary/25 bg-primary/10 p-5">
+                      <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-foreground">
+                        <Target className="h-4 w-4 text-primary" />
+                        Eco-Challenge
+                      </div>
+                      <p className="text-sm leading-relaxed text-muted-foreground">{selectedStory.challenge}</p>
+                    </div>
+
+                    <div className="rounded-2xl border border-border bg-muted/30 p-5">
+                      <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
+                        <Volume2 className="h-4 w-4 text-primary" />
+                        Kamus Mini
+                      </div>
+                      <div className="space-y-3">
+                        {selectedStory.glossary.map((item) => (
+                          <div key={`${selectedCard.id}-${item.term}`} className="rounded-xl border border-border bg-card p-3">
+                            <div className="flex items-center justify-between gap-3">
+                              <p className="text-sm font-semibold text-foreground">{item.term}</p>
+                              {item.pronunciation && (
+                                <span className="rounded-full bg-primary/10 px-2 py-1 text-[10px] font-semibold text-primary">{item.pronunciation}</span>
+                              )}
+                            </div>
+                            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{item.meaning}</p>
+                          </div>
+                        ))}
+                      </div>
                     </div>
 
                     <div className="rounded-2xl border border-border bg-muted/30 p-5">
@@ -1153,6 +1547,9 @@ export function HistoryCultureSection({ lang }: Props) {
                     </div>
                   </div>
                 </div>
+                {vrOpen && selectedCard.id === 'aceh' && (
+                  <AcehVrSimulator onClose={() => setVrOpen(false)} />
+                )}
               </div>
             </motion.div>
           </motion.div>
@@ -1162,7 +1559,120 @@ export function HistoryCultureSection({ lang }: Props) {
   );
 }
 
+function AcehLivingCanvas({
+  card,
+  story,
+  ecoSlider,
+  setEcoSlider,
+  rhythmScore,
+  setRhythmScore,
+  onLaunchVr,
+}: {
+  card: CultureCard;
+  story: CultureStoryContent;
+  ecoSlider: number;
+  setEcoSlider: Dispatch<SetStateAction<number>>;
+  rhythmScore: number;
+  setRhythmScore: Dispatch<SetStateAction<number>>;
+  onLaunchVr: () => void;
+}) {
+  return (
+    <div className="rounded-3xl border border-border bg-slate-950/95 p-6 text-white shadow-2xl mb-6">
+      <div className="mb-5">
+        <p className="text-xs uppercase tracking-[0.2em] text-primary">Aceh Story Mode</p>
+        <h3 className="mt-3 text-2xl font-bold">Ritme Saman & Kearifan Pesisir</h3>
+        <p className="mt-3 text-sm leading-relaxed text-white/70">
+          {story.ecoWisdom}
+        </p>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+          <p className="text-sm font-semibold text-white">Tari Saman</p>
+          <p className="mt-2 text-xs leading-relaxed text-white/70">
+            Tari Saman adalah bahasa tubuh kolektif: tepuk tangan, dada, dan paha bergerak cepat seperti gelombang. Busana hitam-emas dan pola Gayo menegaskan disiplin, doa, dan kebersamaan yang ritmis.
+          </p>
+          <div className="mt-4 rounded-2xl bg-background/5 p-3">
+            <div className="text-[11px] uppercase tracking-[0.18em] text-primary">Rhythm meter</div>
+            <div className="mt-2 flex items-center justify-between text-sm text-white">
+              <span>Score</span>
+              <span className="font-semibold">{rhythmScore}</span>
+            </div>
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
+              <div className="h-full rounded-full bg-primary" style={{ width: `${rhythmScore}%` }} />
+            </div>
+            <p className="mt-2 text-xs text-white/60">Tekan A, S, D, F untuk tambah ritme ketika Aceh aktif.</p>
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+          <p className="text-sm font-semibold text-white">Eco Slider</p>
+          <p className="mt-2 text-xs leading-relaxed text-white/70">
+            Geser untuk membandingkan ruang hidup terjaga dengan tekanan modern.
+          </p>
+          <input
+            type="range"
+            min="25"
+            max="82"
+            value={ecoSlider}
+            onChange={(event) => setEcoSlider(Number(event.target.value))}
+            className="mt-4 w-full accent-primary"
+            aria-label="Aceh eco slider"
+          />
+          <div className="mt-3 flex items-center justify-between text-xs text-white/70">
+            <span>Tradisi</span>
+            <span>{ecoSlider}%</span>
+          </div>
+          <button
+            type="button"
+            onClick={onLaunchVr}
+            className="mt-4 inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+          >
+            Masuk Aceh VR
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AcehVrSimulator({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 px-4 py-10">
+      <div className="relative w-full max-w-3xl overflow-hidden rounded-3xl border border-white/10 bg-slate-900 p-6 shadow-2xl">
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 rounded-full border border-white/15 bg-slate-800/90 p-2 text-white transition hover:bg-slate-700"
+          aria-label="Close VR simulator"
+        >
+          <X className="h-4 w-4" />
+        </button>
+        <div className="space-y-4 text-white">
+          <div className="rounded-3xl bg-white/5 p-5">
+            <p className="text-xs uppercase tracking-[0.2em] text-primary">Aceh VR Simulator</p>
+            <h4 className="mt-2 text-2xl font-bold">Jelajah Aceh Virtual</h4>
+            <p className="mt-3 text-sm leading-relaxed text-white/70">
+              Kamu berada di dalam dunia Aceh digital: pantai, meunasah, dan ritme Saman yang bergerak seirama dengan komunitas.
+            </p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+              <p className="text-sm font-semibold text-white">Ritme</p>
+              <p className="mt-2 text-xs text-white/70">Rasakan kekompakan gerak dan nuansa musik tradisional.</p>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+              <p className="text-sm font-semibold text-white">Hutan Pesisir</p>
+              <p className="mt-2 text-xs text-white/70">Pelajari etika laut dan tanggung jawab terhadap ekosistem setempat.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function StoryBlock({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) {
+
   return (
     <div className="rounded-2xl border border-border bg-muted/30 p-5">
       <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
@@ -1171,5 +1681,74 @@ function StoryBlock({ icon, title, text }: { icon: React.ReactNode; title: strin
       </div>
       <p className="text-sm leading-relaxed text-muted-foreground">{text}</p>
     </div>
+  );
+}
+
+function EcoScoreWheel({ label, value, color }: { label: string; value: number; color: string }) {
+  return (
+    <div className="flex items-center gap-3 rounded-2xl border border-white/15 bg-white/10 p-3 backdrop-blur">
+      <svg viewBox="0 0 44 44" className="h-11 w-11 -rotate-90">
+        <circle cx="22" cy="22" r="18" fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="5" />
+        <motion.circle
+          cx="22"
+          cy="22"
+          r="18"
+          fill="none"
+          stroke={color}
+          strokeLinecap="round"
+          strokeWidth="5"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: value / 100 }}
+          transition={{ duration: 1.1, ease: 'easeOut' }}
+        />
+      </svg>
+      <div>
+        <div className="text-lg font-bold text-background">{value}%</div>
+        <div className="text-[10px] uppercase tracking-wider text-background/55">{label}</div>
+      </div>
+    </div>
+  );
+}
+
+function MiniRadar({ region, location }: { region: Region; location: string }) {
+  const position = getRegionRadarPosition(region);
+
+  return (
+    <div className="absolute right-5 top-5 w-40 rounded-2xl border border-white/20 bg-black/35 p-4 text-white backdrop-blur">
+      <div className="mb-3 flex items-center gap-2 text-[10px] uppercase tracking-wider text-white/60">
+        <MapPin className="h-3 w-3" />
+        Mini Radar
+      </div>
+      <div className="relative h-20 rounded-xl border border-white/15 bg-white/10">
+        <div className="absolute left-[12%] top-[36%] h-8 w-20 rounded-full border border-white/20" />
+        <div className="absolute left-[36%] top-[28%] h-9 w-14 rounded-full border border-white/20" />
+        <div className="absolute left-[54%] top-[45%] h-5 w-24 rounded-full border border-white/20" />
+        <div className="absolute" style={position}>
+          <motion.span
+            className="absolute -left-3 -top-3 h-6 w-6 rounded-full border border-primary"
+            animate={{ scale: [0.8, 1.5, 0.8], opacity: [0.9, 0.1, 0.9] }}
+            transition={{ duration: 1.8, repeat: Infinity }}
+          />
+          <span className="absolute -left-1.5 -top-1.5 h-3 w-3 rounded-full bg-primary shadow-[0_0_18px_rgba(82,183,136,0.9)]" />
+        </div>
+      </div>
+      <p className="mt-2 line-clamp-1 text-[11px] text-white/70">{location}</p>
+    </div>
+  );
+}
+
+function AudioWaveform() {
+  return (
+    <button type="button" className="flex h-10 items-center gap-1 rounded-full border border-white/20 bg-white/10 px-3" aria-label="Preview cultural soundbite">
+      {[8, 16, 11, 22, 14].map((height, index) => (
+        <motion.span
+          key={index}
+          className="w-1 rounded-full bg-primary"
+          style={{ height }}
+          animate={{ scaleY: [0.55, 1, 0.55] }}
+          transition={{ duration: 0.9, delay: index * 0.08, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      ))}
+    </button>
   );
 }

@@ -8,6 +8,9 @@
 
 # Production
 /dist
+!/dist/
+!/dist/assets/
+!/dist/assets/*
 
 # Misc
 .DS_Store

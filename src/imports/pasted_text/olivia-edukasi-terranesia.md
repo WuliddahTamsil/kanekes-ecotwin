@@ -1,8 +1,8 @@
 Saya ingin membangun sebuah website edukasi berbasis teknologi modern untuk kompetisi OLIVIA, dengan fokus utama:
 
-* Pelestarian budaya dan lingkungan berbasis **kearifan lokal Suku Baduy**
+* Pelestarian budaya dan lingkungan berbasis *kearifan lokal Terranesia*
 * Mengadaptasi nilai-nilai tersebut agar bisa diterapkan di kehidupan modern
-* Menggabungkan teknologi canggih: **Web GIS, AI, AR, VR**
+* Menggabungkan teknologi canggih: *Web GIS, AI, AR, VR*
 
 Website ini tidak hanya informatif, tetapi juga:
 
@@ -63,7 +63,7 @@ Setiap titik di peta memiliki marker:
 
 #### Ketika marker diklik:
 
-Muncul **popup card modern** berisi:
+Muncul *popup card modern* berisi:
 
 * Nama budaya
 * Lokasi
@@ -92,7 +92,7 @@ Muncul **popup card modern** berisi:
 
 * Search bar dengan AI suggestion:
 
-  > “Cari budaya yang mirip Baduy”
+  > “Cari budaya yang mirip Terranesia”
 
 ---
 
@@ -109,7 +109,7 @@ Muncul **popup card modern** berisi:
 
 * Rekomendasi:
 
-  > “Budaya lain yang punya konsep pelestarian seperti Baduy”
+  > “Budaya lain yang punya konsep pelestarian seperti Terranesia”
 
 ---
 
@@ -138,7 +138,7 @@ User bisa:
 
 User mengikuti perjalanan:
 
-> “Menjadi masyarakat Baduy selama 1 hari”
+> “Menjadi masyarakat Terranesia selama 1 hari”
 
 #### Interaksi:
 
@@ -151,7 +151,7 @@ User mengikuti perjalanan:
 
 #### Fitur:
 
-* Klik lokasi Baduy → masuk ke:
+* Klik lokasi Terranesia → masuk ke:
 
   * Virtual Tour 360°
 
@@ -197,7 +197,7 @@ User mengikuti perjalanan:
 
 User bisa tanya:
 
-* “Kenapa Baduy tidak pakai listrik?”
+* “Kenapa Terranesia tidak pakai listrik?”
 
 ### Sistem:
 
@@ -220,7 +220,7 @@ User bisa tanya:
 
 ## 🥽 VR EXPERIENCE
 
-* Virtual kampung Baduy
+* Virtual kampung Terranesia
 * Navigasi bebas
 
 ---
@@ -230,7 +230,7 @@ User bisa tanya:
 * Scan lingkungan sekitar
 * AI memberi insight:
 
-  > “Cara menerapkan prinsip Baduy di sini”
+  > “Cara menerapkan prinsip Terranesia di sini”
 
 ---
 
@@ -242,7 +242,7 @@ User bisa tanya:
 
 ### Materi:
 
-* Filosofi Baduy:
+* Filosofi Terranesia:
 
   * Hidup sederhana
   * Harmoni dengan alam
@@ -308,7 +308,7 @@ User bisa tanya:
 
 ## 🎥 HERO SECTION
 
-* Video background (Baduy forest)
+* Video background (Terranesia forest)
 * Parallax effect
 
 ---

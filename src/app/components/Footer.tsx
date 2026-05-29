@@ -6,7 +6,7 @@ interface Props { lang: 'id' | 'en' }
 
 const t = {
   id: {
-    tagline: 'Melestarikan kearifan lokal Suku Baduy melalui teknologi modern untuk generasi yang mencintai alam.',
+    tagline: 'Melestarikan kearifan lokal Nusantara melalui teknologi modern untuk generasi yang mencintai alam.',
     explore: 'Jelajahi',
     links1: ['Beranda', 'Peta Budaya', 'The Lab', 'Edukasi', 'Donasi'],
     hrefs1: ['#beranda', '#jelajah', '#lab', '#edukasi', '#donasi'],
@@ -21,13 +21,13 @@ const t = {
     subSuccess: 'Berhasil! Terima kasih telah berlangganan 🌿',
     contact: 'Kontak',
     address: 'Jl. Pendidikan No. 1, Jakarta Selatan, DKI Jakarta',
-    email: 'hello@baduyedu.id',
+    email: 'hello@terranesia.id',
     phone: '+62 21 1234 5678',
-    rights: '© 2026 BaduyEdu. Hak Cipta Dilindungi.',
+    rights: '� 2026 Terranesia. Hak Cipta Dilindungi.',
     madeWith: 'Dibuat dengan ❤️ untuk Kompetisi OLIVIA 2026',
   },
   en: {
-    tagline: 'Preserving the local wisdom of the Baduy Tribe through modern technology for a nature-loving generation.',
+    tagline: 'Preserving Nusantara local wisdom through modern technology for a nature-loving generation.',
     explore: 'Explore',
     links1: ['Home', 'Culture Map', 'The Lab', 'Education', 'Donate'],
     hrefs1: ['#beranda', '#jelajah', '#lab', '#edukasi', '#donasi'],
@@ -42,9 +42,9 @@ const t = {
     subSuccess: 'Success! Thank you for subscribing 🌿',
     contact: 'Contact',
     address: 'Jl. Pendidikan No. 1, South Jakarta, DKI Jakarta',
-    email: 'hello@baduyedu.id',
+    email: 'hello@terranesia.id',
     phone: '+62 21 1234 5678',
-    rights: '© 2026 BaduyEdu. All Rights Reserved.',
+    rights: '� 2026 Terranesia. All Rights Reserved.',
     madeWith: 'Made with ❤️ for OLIVIA Competition 2026',
   },
 };
@@ -114,7 +114,7 @@ export function Footer({ lang }: Props) {
               </div>
               <div>
                 <div style={{ fontFamily: 'Playfair Display, serif', fontWeight: 700 }} className="text-background text-base">
-                  Baduy<span className="text-primary">Edu</span>
+                  Terranesia
                 </div>
                 <div className="text-background/40 text-[10px] tracking-widest uppercase">OLIVIA 2026</div>
               </div>

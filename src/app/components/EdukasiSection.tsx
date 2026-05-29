@@ -10,8 +10,8 @@ const philosophies = [
   {
     icon: Leaf, color: 'text-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-950/30',
     title: 'Hidup Sederhana', titleEn: 'Simple Living',
-    desc: 'Baduy hidup tanpa listrik, teknologi modern, dan kemewahan. Mereka percaya bahwa kebahagiaan sejati ada pada kesederhanaan dan kedekatan dengan alam.',
-    descEn: 'Baduy live without electricity, modern technology, or luxury. They believe true happiness lies in simplicity and closeness to nature.',
+    desc: 'Banyak komunitas adat Nusantara menjaga kesederhanaan, batas konsumsi, dan kedekatan dengan alam sebagai sumber kebahagiaan.',
+    descEn: 'Many Nusantara indigenous communities preserve simplicity, mindful consumption, and closeness to nature as a source of happiness.',
     quote: '"Lain ti kahayang, tapi ti kaperluan"',
     quoteEn: '"Not from desire, but from necessity"',
   },
@@ -52,43 +52,43 @@ interface QuizQuestion {
 const questions: QuizQuestion[] = [
   {
     id: 1,
-    q: 'Apa nama hukum adat utama Suku Baduy yang mengatur kehidupan mereka?',
-    qEn: 'What is the name of the main customary law of the Baduy Tribe that governs their lives?',
+    q: 'Apa nama salah satu hukum adat Nusantara yang mengatur keseimbangan hidup?',
+    qEn: 'What is the name of one Nusantara customary law that guides balanced living?',
     opts: ['Pikukuh', 'Pancasila', 'Sasi', 'Awig-awig'],
     optsEn: ['Pikukuh', 'Pancasila', 'Sasi', 'Awig-awig'],
     correct: 0,
-    explanation: 'Pikukuh adalah hukum adat Baduy yang melarang penggunaan teknologi modern, pembukaan lahan hutan, dan bepergian dengan kendaraan.',
-    explanationEn: 'Pikukuh is the Baduy customary law that prohibits the use of modern technology, clearing forestland, and traveling by vehicle.',
+    explanation: 'Pikukuh adalah contoh hukum adat Nusantara yang menjaga batas penggunaan teknologi, lahan, dan cara hidup agar tetap selaras dengan alam.',
+    explanationEn: 'Pikukuh is an example of Nusantara customary law that sets boundaries around technology, land use, and daily life to stay aligned with nature.',
   },
   {
     id: 2,
-    q: 'Baduy Dalam terletak di kabupaten mana?',
-    qEn: 'Baduy Dalam is located in which regency?',
+    q: 'Salah satu wilayah adat di Banten yang menjaga hutan adat terletak di kabupaten mana?',
+    qEn: 'One customary area in Banten that protects customary forests is located in which regency?',
     opts: ['Serang', 'Lebak', 'Pandeglang', 'Sukabumi'],
     optsEn: ['Serang', 'Lebak', 'Pandeglang', 'Sukabumi'],
     correct: 1,
-    explanation: 'Baduy Dalam terletak di Kabupaten Lebak, Banten. Area ini adalah wilayah paling sakral yang hanya bisa dimasuki tamu dengan izin khusus.',
-    explanationEn: 'Baduy Dalam is located in Lebak Regency, Banten. This area is the most sacred zone accessible only to guests with special permission.',
+    explanation: 'Kabupaten Lebak, Banten dikenal memiliki wilayah adat yang menjaga ruang sakral dan aturan kunjungan khusus.',
+    explanationEn: 'Lebak Regency, Banten is known for customary areas that protect sacred spaces and special visiting rules.',
   },
   {
     id: 3,
-    q: 'Apa yang dimaksud dengan "leuweung kolot" dalam tradisi Baduy?',
-    qEn: 'What does "leuweung kolot" mean in Baduy tradition?',
+    q: 'Apa yang dimaksud dengan "leuweung kolot" dalam tradisi lokal?',
+    qEn: 'What does "leuweung kolot" mean in local tradition?',
     opts: ['Hutan produksi', 'Hutan larangan/sakral', 'Hutan pertanian', 'Hutan bambu'],
     optsEn: ['Production forest', 'Forbidden/sacred forest', 'Agricultural forest', 'Bamboo forest'],
     correct: 1,
-    explanation: '"Leuweung kolot" adalah hutan tua yang dilarang untuk ditebang atau dimasuki. Ini merupakan praktik konservasi lingkungan tradisional Baduy.',
-    explanationEn: '"Leuweung kolot" is an old forest that is forbidden from being cut down or entered. This is a traditional Baduy environmental conservation practice.',
+    explanation: '"Leuweung kolot" adalah hutan tua yang dilarang untuk ditebang atau dimasuki. Ini merupakan praktik konservasi lingkungan tradisional Nusantara.',
+    explanationEn: '"Leuweung kolot" is an old forest that is forbidden from being cut down or entered. This is a traditional Nusantara environmental conservation practice.',
   },
   {
     id: 4,
-    q: 'Warna pakaian yang dikenakan oleh masyarakat Baduy Dalam adalah?',
-    qEn: 'What color clothing is worn by the Baduy Dalam community?',
+    q: 'Warna putih dalam sejumlah pakaian adat sering melambangkan apa?',
+    qEn: 'What does white often symbolize in several traditional clothing systems?',
     opts: ['Putih', 'Hitam', 'Biru', 'Coklat'],
     optsEn: ['White', 'Black', 'Blue', 'Brown'],
     correct: 0,
-    explanation: 'Masyarakat Baduy Dalam mengenakan pakaian serba putih sebagai simbol kesucian dan kedekatan mereka dengan dunia spiritual.',
-    explanationEn: 'The Baduy Dalam community wears all-white clothing as a symbol of purity and their closeness to the spiritual world.',
+    explanation: 'Dalam banyak tradisi lokal, warna putih dapat melambangkan kesucian, ketulusan, dan kedekatan dengan dunia spiritual.',
+    explanationEn: 'In many local traditions, white can symbolize purity, sincerity, and closeness to the spiritual world.',
   },
 ];
 
@@ -96,17 +96,17 @@ const badges = [
   { id: 'pemula', icon: '🌱', name: 'Penjelajah Pemula', nameEn: 'Beginner Explorer', desc: 'Mulai belajar budaya', descEn: 'Start learning culture', earned: true, color: 'border-emerald-400 bg-emerald-50 dark:bg-emerald-950/30' },
   { id: 'penjaga', icon: '🌿', name: 'Penjaga Hutan', nameEn: 'Forest Guardian', desc: 'Selesaikan 5 quiz', descEn: 'Complete 5 quizzes', earned: true, color: 'border-green-500 bg-green-50 dark:bg-green-950/30' },
   { id: 'budayawan', icon: '🏺', name: 'Budayawan Muda', nameEn: 'Young Culturalist', desc: 'Pelajari 3 budaya', descEn: 'Learn 3 cultures', earned: false, color: 'border-amber-400 bg-amber-50 dark:bg-amber-950/30' },
-  { id: 'master', icon: '🌟', name: 'Master Baduy', nameEn: 'Baduy Master', desc: 'Skor sempurna quiz', descEn: 'Perfect quiz score', earned: false, color: 'border-purple-400 bg-purple-50 dark:bg-purple-950/30' },
+  { id: 'master', icon: '🌟', name: 'Master Terranesia', nameEn: 'Terranesia Master', desc: 'Skor sempurna quiz', descEn: 'Perfect quiz score', earned: false, color: 'border-purple-400 bg-purple-50 dark:bg-purple-950/30' },
   { id: 'duta', icon: '🏆', name: 'Duta Budaya', nameEn: 'Culture Ambassador', desc: 'Selesaikan semua misi', descEn: 'Complete all missions', earned: false, color: 'border-yellow-400 bg-yellow-50 dark:bg-yellow-950/30' },
 ];
 
 const t = {
   id: {
     title: 'Edukasi Pelestarian',
-    sub: 'Pelajari kearifan Baduy melalui konten interaktif yang menyenangkan',
-    philTitle: 'Filosofi Hidup Baduy',
+    sub: 'Pelajari kearifan Nusantara melalui konten interaktif yang menyenangkan',
+    philTitle: 'Filosofi Hidup Nusantara',
     quizTitle: 'Uji Pengetahuanmu',
-    quizSub: 'Tes seberapa dalam kamu mengenal budaya Baduy',
+    quizSub: 'Tes seberapa dalam kamu mengenal budaya Nusantara',
     start: 'Mulai Quiz',
     next: 'Lanjut',
     result: 'Hasil Quiz',
@@ -115,7 +115,7 @@ const t = {
     badgeTitle: 'Koleksi Badge',
     badgeSub: 'Kumpulkan badge dengan menyelesaikan misi belajar',
     challenge: 'Challenge: 7 Hari Hidup Ramah Lingkungan',
-    challengeDesc: 'Ikuti tantangan selama 7 hari untuk menerapkan prinsip Baduy dalam kehidupan sehari-hari',
+    challengeDesc: 'Ikuti tantangan selama 7 hari untuk menerapkan prinsip Terranesia dalam kehidupan sehari-hari',
     join: 'Ikuti Tantangan',
     days: ['Hari 1: No Plastik', 'Hari 2: Jalan Kaki', 'Hari 3: Hemat Air', 'Hari 4: Tanam Pohon', 'Hari 5: Makan Lokal', 'Hari 6: Zero Waste', 'Hari 7: Berbagi'],
     earned: 'Diperoleh',
@@ -123,10 +123,10 @@ const t = {
   },
   en: {
     title: 'Conservation Education',
-    sub: 'Learn Baduy wisdom through fun interactive content',
-    philTitle: 'Baduy Life Philosophy',
+    sub: 'Learn Nusantara wisdom through fun interactive content',
+    philTitle: 'Nusantara Life Philosophy',
     quizTitle: 'Test Your Knowledge',
-    quizSub: 'Test how deeply you know Baduy culture',
+    quizSub: 'Test how deeply you know Nusantara culture',
     start: 'Start Quiz',
     next: 'Next',
     result: 'Quiz Result',
@@ -135,7 +135,7 @@ const t = {
     badgeTitle: 'Badge Collection',
     badgeSub: 'Collect badges by completing learning missions',
     challenge: 'Challenge: 7 Days Eco-Friendly Living',
-    challengeDesc: 'Take a 7-day challenge to apply Baduy principles in your daily life',
+    challengeDesc: 'Take a 7-day challenge to apply Terranesia principles in your daily life',
     join: 'Join Challenge',
     days: ['Day 1: No Plastic', 'Day 2: Walk More', 'Day 3: Save Water', 'Day 4: Plant Trees', 'Day 5: Eat Local', 'Day 6: Zero Waste', 'Day 7: Share'],
     earned: 'Earned',
@@ -253,8 +253,8 @@ export function EdukasiSection({ lang }: Props) {
             {quizState === 'idle' && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-8">
                 <div className="text-5xl mb-4">🧠</div>
-                <div className="text-foreground font-semibold mb-2">{questions.length} {lang === 'id' ? 'Pertanyaan tentang Baduy' : 'Questions about Baduy'}</div>
-                <div className="text-muted-foreground text-sm mb-6">{lang === 'id' ? 'Uji pemahamanmu tentang kearifan lokal Suku Baduy' : 'Test your understanding of Baduy Tribe local wisdom'}</div>
+                <div className="text-foreground font-semibold mb-2">{questions.length} {lang === 'id' ? 'Pertanyaan Terranesia' : 'Terranesia Questions'}</div>
+                <div className="text-muted-foreground text-sm mb-6">{lang === 'id' ? 'Uji pemahamanmu tentang kearifan lokal Nusantara' : 'Test your understanding of Nusantara local wisdom'}</div>
                 <button
                   onClick={() => setQuizState('active')}
                   className="px-8 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity shadow-lg shadow-primary/25"
@@ -460,3 +460,4 @@ export function EdukasiSection({ lang }: Props) {
     </section>
   );
 }
+

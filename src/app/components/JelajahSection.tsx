@@ -288,7 +288,7 @@ const t = {
     search: 'Cari budaya atau daerah...',
     filter: 'Filter Kategori',
     compare: 'Mode Perbandingan',
-    story: 'Petualangan Baduy',
+    story: 'Petualangan Terranesia',
     all: 'Semua',
     tradisi: 'Tradisi',
     ritual: 'Ritual',
@@ -310,14 +310,14 @@ const t = {
     philosophyTitle: 'Filosofi Adat Utama',
     backToMap: 'Kembali ke Peta',
     suggestionTitle: 'Coba tanya AI:',
-    storyTitle: 'Simulasi Kehidupan Baduy',
-    storySub: 'Hadapi tantangan hidup ramah lingkungan berdasarkan hukum adat Pikukuh Suku Baduy.',
+    storyTitle: 'Simulasi Kehidupan Terranesia',
+    storySub: 'Hadapi tantangan hidup ramah lingkungan berdasarkan kearifan lokal Nusantara.',
     ecoScore: 'Skor Ekologi',
     tradScore: 'Ketaatan Adat',
     sprScore: 'Nilai Spiritual',
     storyStart: 'Mulai Petualangan',
     storyRestart: 'Ulangi Petualangan',
-    congratulations: 'Selamat! Kamu telah menyelesaikan simulasi sehari bersama Suku Baduy.',
+    congratulations: 'Selamat! Kamu telah menyelesaikan simulasi sehari bersama Terranesia.',
   },
   en: {
     title: 'Nusantara Cultural Explorer',
@@ -325,7 +325,7 @@ const t = {
     search: 'Search culture or region...',
     filter: 'Category Filter',
     compare: 'Comparison Mode',
-    story: 'Baduy Adventure',
+    story: 'Terranesia Adventure',
     all: 'All',
     tradisi: 'Tradition',
     ritual: 'Ritual',
@@ -347,14 +347,14 @@ const t = {
     philosophyTitle: 'Core Customary Philosophy',
     backToMap: 'Back to Map',
     suggestionTitle: 'Ask AI:',
-    storyTitle: 'Baduy Life Simulation',
-    storySub: 'Face the challenges of eco-friendly living based on the Pikukuh custom of the Baduy Tribe.',
+    storyTitle: 'Terranesia Life Simulation',
+    storySub: 'Face the challenges of eco-friendly living based on Nusantara local wisdom.',
     ecoScore: 'Ecological Score',
     tradScore: 'Custom Compliance',
     sprScore: 'Spiritual Value',
     storyStart: 'Start Adventure',
     storyRestart: 'Restart Adventure',
-    congratulations: 'Congratulations! You have completed the one-day simulation with the Baduy.',
+    congratulations: 'Congratulations! You have completed the one-day simulation with Terranesia.',
   },
 };
 
@@ -438,8 +438,8 @@ const storyScenarios: ScenarioStep[] = [
   {
     titleId: 'Pos Pintu Masuk Ciboleger (Pagi)',
     titleEn: 'Ciboleger Entrance Checkpoint (Morning)',
-    descId: 'Kamu baru saja tiba di perbatasan desa Baduy. Pemandu mengingatkan tentang aturan Pikukuh adat. Kamu sedang memegang botol air plastik sekali pakai yang baru saja kamu beli di kota.',
-    descEn: 'You have just arrived at the border of the Baduy village. The guide reminds you of the Pikukuh customary rule. You are holding a single-use plastic water bottle you recently bought in the city.',
+    descId: 'Kamu baru saja tiba di perbatasan desa budaya Nusantara. Pemandu mengingatkan tentang aturan Pikukuh adat. Kamu sedang memegang botol air plastik sekali pakai yang baru saja kamu beli di kota.',
+    descEn: 'You have just arrived at the border of the Nusantara village. The guide reminds you of the Pikukuh customary rule. You are holding a single-use plastic water bottle you recently bought in the city.',
     image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80',
     lat: -6.5684,
     lng: 106.2628,
@@ -468,8 +468,8 @@ const storyScenarios: ScenarioStep[] = [
   {
     titleId: 'Makan Siang di Kampung Kaduketug (Siang)',
     titleEn: 'Lunch at Kaduketug Village (Noon)',
-    descId: 'Kamu diundang makan siang di rumah panggung milik seorang warga Baduy Luar. Mereka menyajikan hidangan nasi huma lokal. Tidak ada kompor gas atau peralatan listrik, memasak menggunakan kayu bakar kering.',
-    descEn: 'You are invited to have lunch inside a stilt house of a Baduy Luar resident. They serve local huma hill rice. There are no gas stoves or electrical appliances; cooking is done using dry firewood.',
+    descId: 'Kamu diundang makan siang di rumah panggung milik seorang warga desa adat. Mereka menyajikan hidangan nasi huma lokal. Tidak ada kompor gas atau peralatan listrik, memasak menggunakan kayu bakar kering.',
+    descEn: 'You are invited to have lunch inside a stilt house of a customary village resident. They serve local huma hill rice. There are no gas stoves or electrical appliances; cooking is done using dry firewood.',
     image: VILLAGE_IMG,
     lat: -6.6080,
     lng: 106.2678,
@@ -511,8 +511,8 @@ const storyScenarios: ScenarioStep[] = [
         ecoEffect: 25,
         tradEffect: 25,
         sprEffect: 20,
-        feedbackId: 'Hebat! Kamu merangkul gaya hidup murni Suku Baduy dan menjaga sungai tetap bersih bagi ribuan makhluk hidup di hilir.',
-        feedbackEn: 'Great! You embrace the pure lifestyle of the Baduy and keep the river clean for thousands of living organisms downstream.',
+        feedbackId: 'Hebat! Kamu merangkul gaya hidup lestari Terranesia dan menjaga sungai tetap bersih bagi ribuan makhluk hidup di hilir.',
+        feedbackEn: 'Great! You embrace the sustainable Terranesia lifestyle and keep the river clean for thousands of living organisms downstream.',
       },
       {
         textId: 'Menggunakan sedikit sabun cair berlabel "Biodegradable/Organik" secara diam-diam.',
@@ -520,8 +520,8 @@ const storyScenarios: ScenarioStep[] = [
         ecoEffect: -5,
         tradEffect: -15,
         sprEffect: -10,
-        feedbackId: 'Meskipun organik, hukum adat melarang segala zat asing komersial. Kejujuran adalah kunci kelestarian alam Baduy.',
-        feedbackEn: 'Even if organic, customary law bans all commercial foreign substances. Honesty is key to preserving Baduy nature.',
+        feedbackId: 'Meskipun organik, hukum adat melarang segala zat asing komersial. Kejujuran adalah kunci kelestarian alam Nusantara.',
+        feedbackEn: 'Even if organic, customary law bans all commercial foreign substances. Honesty is key to preserving Nusantara nature.',
       }
     ]
   },
@@ -541,8 +541,8 @@ const storyScenarios: ScenarioStep[] = [
         ecoEffect: 15,
         tradEffect: 20,
         sprEffect: 25,
-        feedbackId: 'Luar biasa! Interaksi sosial langsung tanpa terganggu gawai membuatmu benar-benar memahami kehangatan komunal dan ketenangan batin Baduy.',
-        feedbackEn: 'Wonderful! Direct social interaction without gadget distractions helps you truly understand the communal warmth and inner peace of the Baduy.',
+        feedbackId: 'Luar biasa! Interaksi sosial langsung tanpa terganggu gawai membuatmu benar-benar memahami kehangatan komunal dan ketenangan batin budaya Nusantara.',
+        feedbackEn: 'Wonderful! Direct social interaction without gadget distractions helps you truly understand the communal warmth and inner peace of Nusantara culture.',
       },
       {
         textId: 'Menyalakan senter LED baterai berdaya tinggi milikmu untuk membaca buku di sudut kamar.',
@@ -550,8 +550,8 @@ const storyScenarios: ScenarioStep[] = [
         ecoEffect: -5,
         tradEffect: -10,
         sprEffect: -5,
-        feedbackId: 'Cahaya buatan yang terlalu terang dinilai merusak ketenangan malam alami permukiman adat Baduy. Hargailah suasana hening malam.',
-        feedbackEn: 'Artificial light that is too bright is considered disruptive to the natural night peace of the Baduy village. Respect the silent night.',
+        feedbackId: 'Cahaya buatan yang terlalu terang dinilai merusak ketenangan malam alami permukiman adat Nusantara. Hargailah suasana hening malam.',
+        feedbackEn: 'Artificial light that is too bright is considered disruptive to the natural night peace of the Nusantara village. Respect the silent night.',
       }
     ]
   }
@@ -1282,8 +1282,8 @@ export function JelajahSection({ lang, isDark }: Props) {
                       <h4 className="text-foreground text-sm font-bold">{tx.congratulations}</h4>
                       <p className="text-muted-foreground text-xs leading-relaxed">
                         {lang === 'id' 
-                          ? 'Kamu berhasil menyesuaikan diri dan menghormati adat lokal. Pikirkan bagaimana nilai kelestarian Baduy bisa kamu bawa pulang ke perkotaan modern!'
-                          : 'You successfully adapted and respected local customs. Think about how you can carry Baduy preservation values back to modern urban environments!'}
+                          ? 'Kamu berhasil menyesuaikan diri dan menghormati adat lokal. Pikirkan bagaimana nilai kelestarian Terranesia bisa kamu bawa pulang ke perkotaan modern!'
+                          : 'You successfully adapted and respected local customs. Think about how you can carry Terranesia preservation values back to modern urban environments!'}
                       </p>
                       
                       <div className="bg-primary/5 rounded-2xl p-4 border border-primary/10 text-left space-y-2">
@@ -1662,3 +1662,4 @@ export function JelajahSection({ lang, isDark }: Props) {
     </section>
   );
 }
+

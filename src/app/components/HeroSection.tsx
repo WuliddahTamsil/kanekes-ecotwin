@@ -10,9 +10,9 @@ interface Props { lang: 'id' | 'en' }
 const t = {
   id: {
     badge: 'Kompetisi OLIVIA 2026',
-    title1: 'Temukan Kearifan',
-    title2: 'Suku Baduy',
-    sub: 'Jelajahi kekayaan budaya Suku Baduy melalui teknologi Web GIS, Kecerdasan Buatan, dan pengalaman AR/VR yang imersif — untuk generasi yang mencintai alam.',
+    title1: 'Jelajahi Warisan',
+    title2: 'Indonesia',
+    sub: 'Jelajahi kekayaan budaya Nusantara melalui teknologi Web GIS, Kecerdasan Buatan, dan pengalaman AR/VR yang imersif untuk generasi yang mencintai alam.',
     cta1: 'Mulai Jelajah',
     cta2: 'Tonton Demo',
     stat1: '340+', l1: 'Budaya Terpetakan',
@@ -25,9 +25,9 @@ const t = {
   },
   en: {
     badge: 'OLIVIA Competition 2026',
-    title1: 'Discover the Wisdom',
-    title2: 'of Baduy Tribe',
-    sub: 'Explore the rich cultural heritage of the Baduy Tribe through immersive Web GIS, Artificial Intelligence, and AR/VR technology — for a generation that loves nature.',
+    title1: 'Discover',
+    title2: 'Indonesian Heritage',
+    sub: 'Explore Nusantara cultural heritage through immersive Web GIS, Artificial Intelligence, and AR/VR technology for a generation that loves nature.',
     cta1: 'Start Exploring',
     cta2: 'Watch Demo',
     stat1: '340+', l1: 'Mapped Cultures',
@@ -71,7 +71,7 @@ export function HeroSection({ lang }: Props) {
       <div className="absolute inset-0">
         <img
           src={HERO_BG}
-          alt="Baduy forest"
+          alt="Terranesia cultural landscape"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background" />
@@ -185,15 +185,15 @@ export function HeroSection({ lang }: Props) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="bg-white/15 backdrop-blur rounded-xl p-3 border border-white/20">
-                    <p className="text-white text-xs font-semibold">Kampung Baduy Dalam</p>
-                    <p className="text-white/70 text-xs">Lebak, Banten • 📍 Wilayah Adat</p>
+                    <p className="text-white text-xs font-semibold">Desa Budaya Nusantara</p>
+                    <p className="text-white/70 text-xs">Indonesia - Wilayah Adat</p>
                   </div>
                 </div>
               </div>
 
               {/* Secondary card */}
               <div className="absolute bottom-0 left-0 w-60 h-72 rounded-2xl overflow-hidden shadow-2xl border border-white/20">
-                <img src={PERSON_IMG} alt="Baduy person" className="w-full h-full object-cover" />
+                <img src={PERSON_IMG} alt="Terranesia culture guide" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="flex items-center gap-2">

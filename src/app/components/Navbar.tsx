@@ -54,7 +54,7 @@ export function Navbar({ isDark, setIsDark, lang, setLang }: NavbarProps) {
             </div>
             <div className="flex flex-col leading-none">
               <span style={{ fontFamily: 'Playfair Display, serif', fontWeight: 700 }} className="text-foreground text-base">
-                Baduy<span className="text-primary">Edu</span>
+                Terranesia
               </span>
               <span className="text-[10px] text-muted-foreground tracking-widest uppercase">OLIVIA 2026</span>
             </div>
