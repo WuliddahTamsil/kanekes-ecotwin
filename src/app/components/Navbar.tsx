@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, Moon, Sun, Globe, Leaf } from 'lucide-react';
+import { Menu, X, Moon, Sun, Globe, Leaf, Bell } from 'lucide-react';
+import { SubscribeModal } from './SubscribeModal';
 
 interface NavbarProps {
   isDark: boolean;
@@ -17,6 +18,7 @@ const t = {
 export function Navbar({ isDark, setIsDark, lang, setLang }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isSubscribeOpen, setIsSubscribeOpen] = useState(false);
   const tx = t[lang];
 
   useEffect(() => {
@@ -75,6 +77,15 @@ export function Navbar({ isDark, setIsDark, lang, setLang }: NavbarProps) {
 
           {/* Controls */}
           <div className="flex items-center gap-2">
+            {/* Subscribe button */}
+            <button
+              onClick={() => setIsSubscribeOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/25 hover:bg-primary hover:text-primary-foreground font-bold text-xs transition-all shadow-sm cursor-pointer"
+            >
+              <Bell className="w-3.5 h-3.5 animate-bounce" style={{ animationDuration: '3s' }} />
+              <span className="hidden md:inline">{lang === 'id' ? 'Langganan' : 'Subscribe'}</span>
+            </button>
+
             <button
               onClick={() => setLang(lang === 'id' ? 'en' : 'id')}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border text-xs text-muted-foreground hover:text-primary hover:border-primary/60 hover:bg-primary/8 transition-all"
@@ -120,10 +131,27 @@ export function Navbar({ isDark, setIsDark, lang, setLang }: NavbarProps) {
                   {link.label}
                 </a>
               ))}
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  setIsSubscribeOpen(true);
+                }}
+                className="flex items-center gap-2 px-4 py-3 text-sm text-primary hover:bg-primary/8 rounded-lg transition-all text-left w-full font-semibold border-t border-border mt-2 pt-3"
+              >
+                <Bell className="w-4 h-4" />
+                {lang === 'id' ? 'Langganan Kabar Terranesia' : 'Subscribe to Terranesia'}
+              </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Subscribe Modal */}
+      <SubscribeModal 
+        isOpen={isSubscribeOpen}
+        onClose={() => setIsSubscribeOpen(false)}
+        lang={lang}
+      />
     </motion.nav>
   );
 }

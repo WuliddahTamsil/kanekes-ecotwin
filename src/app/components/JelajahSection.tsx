@@ -3,15 +3,14 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   MapPin, Search, Filter, ArrowLeftRight, BookOpen, Eye, X, 
   ChevronRight, TrendingDown, Sparkles, Compass, AlertCircle, 
-  RotateCcw, Sliders, CheckCircle2, Award, Info
+  RotateCcw, Sliders, CheckCircle2, Award, Info, Navigation, ShieldAlert, Thermometer, Trees
 } from 'lucide-react';
 import { 
   RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer, 
   AreaChart, Area, XAxis, YAxis, Tooltip, Legend
 } from 'recharts';
-import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMap, Polyline } from 'react-leaflet';
 import * as L from 'leaflet';
-
 interface Props { 
   lang: 'id' | 'en';
   isDark?: boolean;
@@ -489,11 +488,15 @@ const t = {
 };
 
 // Map controller to handle dynamic flying
-function MapController({ center, zoom }: { center: [number, number]; zoom: number }) {
+function MapController({ center, zoom, bounds }: { center: [number, number]; zoom: number; bounds?: [number, number][] }) {
   const map = useMap();
   useEffect(() => {
-    map.setView(center, zoom, { animate: true, duration: 1.5 });
-  }, [center, zoom, map]);
+    if (bounds && bounds.length > 0) {
+      map.fitBounds(bounds as any, { padding: [50, 50], animate: true, duration: 1.5 });
+    } else {
+      map.setView(center, zoom, { animate: true, duration: 1.5 });
+    }
+  }, [center, zoom, bounds, map]);
   return null;
 }
 
@@ -542,6 +545,46 @@ const createCustomIcon = (type: 'tradisi' | 'ritual' | 'lingkungan', active: boo
     iconAnchor: [16, 32],
   });
 };
+
+interface ExpeditionTrail {
+  id: string;
+  nameId: string;
+  nameEn: string;
+  descId: string;
+  descEn: string;
+  color: string;
+  cultures: string[]; // List of culture IDs
+  guidelinesId: string;
+  guidelinesEn: string;
+  carbonSave: string;
+}
+
+const expeditionTrails: ExpeditionTrail[] = [
+  {
+    id: 'conservation',
+    nameId: 'Jalur Ekspedisi Konservasi Hijau',
+    nameEn: 'Green Conservation Trail',
+    descId: 'Menghubungkan masyarakat adat yang memiliki hukum perlindungan alam dan tata kelola air tradisional terkuat.',
+    descEn: 'Connects indigenous communities with the strongest environmental laws and traditional water management.',
+    color: '#10B981', // Emerald
+    cultures: ['baduy', 'naga', 'bali', 'kajang', 'dayak'],
+    guidelinesId: 'Dilarang menggunakan kendaraan bermotor, membawa plastik sekali pakai, serta wajib menghormati larangan alas kaki di zona sakral.',
+    guidelinesEn: 'No motor vehicles or single-use plastics allowed. Respect footwear restrictions in sacred zones.',
+    carbonSave: 'Est. Reduksi Emisi: 450kg CO2e / perjalanan'
+  },
+  {
+    id: 'ritual_cosmology',
+    nameId: 'Jalur Kosmologi & Ritual Adat',
+    nameEn: 'Cosmology & Customary Ritual Trail',
+    descId: 'Menelusuri ritual penghormatan leluhur, kesenian pahat sakral, dan festival ketangkasan berkuda.',
+    descEn: 'Explores ancestor worship rituals, sacred woodcarvings, and equestrian combat festivals.',
+    color: '#8B5CF6', // Purple/Violet
+    cultures: ['toraja', 'sumba', 'dani', 'asmat', 'mentawai'],
+    guidelinesId: 'Wajib mengenakan kain tenun penghormatan saat menghadiri upacara kematian, menjaga tutur kata, dan meminta izin tetua adat.',
+    guidelinesEn: 'Worn ceremonial woven fabrics required when attending funeral ceremonies. Speak politely and seek permission.',
+    carbonSave: 'Est. Reduksi Emisi: 320kg CO2e / perjalanan'
+  }
+];
 
 // Story Mode Scenarios
 interface ScenarioStep {
@@ -699,9 +742,18 @@ export function JelajahSection({ lang, isDark }: Props) {
   const [compareMode, setCompareMode] = useState(false);
   const [compareLeft, setCompareLeft] = useState<string>('baduy');
   const [compareRight, setCompareRight] = useState<string>('toraja');
+  const [activeTrail, setActiveTrail] = useState<string | null>(null);
   
   const leftCulture = cultures.find(c => c.id === compareLeft)!;
   const rightCulture = cultures.find(c => c.id === compareRight)!;
+
+  const activeTrailData = expeditionTrails.find(t => t.id === activeTrail);
+  const trailPoints = activeTrailData 
+    ? activeTrailData.cultures.map(cId => {
+        const c = cultures.find(cult => cult.id === cId);
+        return c ? [c.lat, c.lng] as [number, number] : null;
+      }).filter((p): p is [number, number] => p !== null)
+    : [];
 
   // Layer toggles
   const [showLayerBudaya, setShowLayerBudaya] = useState(true);
@@ -975,31 +1027,61 @@ export function JelajahSection({ lang, isDark }: Props) {
     }
   };
 
-  // Calculate story ending medal
+  // Calculate story ending medal & branching report details
   const getStoryMedal = () => {
     const finalScore = Math.round((ecoScore + tradScore + sprScore) / 3);
+    
+    // Branching badge title based on individual highest scores
+    let badgeId = 'Pengembara Harmoni';
+    let badgeEn = 'Harmony Nomad';
+    let descId = 'Kamu berhasil mengimbangi seluruh aspek kearifan lokal. Pikirkan bagaimana nilai kelestarian Terranesia bisa kamu bawa pulang ke perkotaan modern!';
+    let descEn = 'You successfully balanced all aspects of local wisdom. Think about how you can carry Terranesia preservation values back to modern urban environments!';
+
+    if (ecoScore >= 75 && ecoScore >= tradScore && ecoScore >= sprScore) {
+      badgeId = 'Duta Hijau Utama (Eco Ambassador)';
+      badgeEn = 'Eco Ambassador';
+      descId = 'Kesadaran ekologi kamu sangat tinggi! Memilih menolak botol plastik dan menggunakan energi terbarukan kayu bakar kering menunjukkan komitmen pelestarian yang luar biasa.';
+      descEn = 'Your ecological awareness is outstanding! Choosing to reject plastic bottles and helping with dry firewood indicates a tremendous conservation commitment.';
+    } else if (tradScore >= 75 && tradScore >= ecoScore && tradScore >= sprScore) {
+      badgeId = 'Penjaga Adat Sakral (Custom Custodian)';
+      badgeEn = 'Custom Custodian';
+      descId = 'Hormat setinggi-tingginya pada adat! Kepatuhan penuh kamu terhadap hukum adat Pikukuh di sungai dan desa menunjukkan rasa hormat mendalam pada leluhur.';
+      descEn = 'Highest respect to customs! Your absolute compliance with Pikukuh customary laws in the river and village shows deep respect for ancestral rules.';
+    } else if (sprScore >= 75 && sprScore >= ecoScore && sprScore >= tradScore) {
+      badgeId = 'Ksatria Spiritual (Spiritual Knight)';
+      badgeEn = 'Spiritual Knight';
+      descId = 'Sensitivitas spiritual kamu sangat istimewa! Menikmati keheningan malam dan menghargai ritus sungai menjalin hubungan batin yang kuat dengan alam Nusantara.';
+      descEn = 'Your spiritual sensitivity is exceptional! Enjoying the quiet night and valuing river rites forged a strong inner connection with Nusantara nature.';
+    }
+
     if (finalScore >= 80) {
       return {
         medalId: 'Medali Emas 🥇',
         medalEn: 'Gold Medal 🥇',
-        titleId: 'Penjaga Hutan Sejati (True Guardian)',
-        titleEn: 'True Guardian of the Forest',
+        badgeId,
+        badgeEn,
+        descId,
+        descEn,
         color: 'text-amber-500 bg-amber-500/10 border-amber-500/30'
       };
     } else if (finalScore >= 60) {
       return {
         medalId: 'Medali Perak 🥈',
         medalEn: 'Silver Medal 🥈',
-        titleId: 'Sahabat Alam (Eco Ally)',
-        titleEn: 'Eco Ally',
+        badgeId,
+        badgeEn,
+        descId,
+        descEn,
         color: 'text-slate-400 bg-slate-400/10 border-slate-400/30'
       };
     } else {
       return {
         medalId: 'Medali Perunggu 🥉',
         medalEn: 'Bronze Medal 🥉',
-        titleId: 'Wisatawan Pemula (Eco Tourist)',
-        titleEn: 'Eco Tourist',
+        badgeId: 'Wisatawan Pemula (Eco Tourist)',
+        badgeEn: 'Eco Tourist',
+        descId: 'Masih banyak kearifan lokal yang bisa dipelajari. Cobalah untuk lebih menghargai alam dan mematuhi tata tertib adat pada perjalanan berikutnya!',
+        descEn: 'There is still a lot of local wisdom to learn. Try to value nature more and obey customary rules on your next journey!',
         color: 'text-amber-800 bg-amber-800/10 border-amber-800/30'
       };
     }
@@ -1153,14 +1235,35 @@ export function JelajahSection({ lang, isDark }: Props) {
               ))}
             </div>
 
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              {/* Expedition Trail Selector */}
+              <select
+                value={activeTrail || ''}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setActiveTrail(val ? val : null);
+                  setCompareMode(false);
+                  setStoryActive(false);
+                  setSelected(null);
+                }}
+                className="px-3 py-2 rounded-full text-xs font-semibold bg-background border border-border text-muted-foreground hover:border-primary/45 focus:outline-none cursor-pointer transition-all shadow-sm"
+              >
+                <option value="">{lang === 'id' ? '🧭 Rute Ekspedisi (None)' : '🧭 Expedition Route (None)'}</option>
+                {expeditionTrails.map(trail => (
+                  <option key={trail.id} value={trail.id}>
+                    {lang === 'id' ? trail.nameId : trail.nameEn}
+                  </option>
+                ))}
+              </select>
+
               {/* Compare Mode Toggle */}
               <button
                 onClick={() => {
                   setCompareMode(!compareMode);
                   setStoryActive(false);
+                  setActiveTrail(null);
                 }}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all shadow-sm ${
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all shadow-sm cursor-pointer ${
                   compareMode
                     ? 'bg-accent text-accent-foreground border border-accent/25'
                     : 'bg-background border border-border text-muted-foreground hover:border-accent/40'
@@ -1173,7 +1276,7 @@ export function JelajahSection({ lang, isDark }: Props) {
               {/* Story Mode Toggle */}
               <button
                 onClick={toggleStoryMode}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all shadow-sm ${
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all shadow-sm cursor-pointer ${
                   storyActive
                     ? 'bg-emerald-600 text-white border border-emerald-500/20'
                     : 'bg-background border border-border text-muted-foreground hover:border-emerald-500/40'
@@ -1209,10 +1312,43 @@ export function JelajahSection({ lang, isDark }: Props) {
             <ZoomControls />
 
             {/* Dynamic Map Fly-to Controller */}
-            <MapController center={mapCenter} zoom={mapZoom} />
+            <MapController center={mapCenter} zoom={mapZoom} bounds={activeTrail ? trailPoints : undefined} />
 
-            {/* Render Markers for filtered cultures (Only if Story Mode is INACTIVE) */}
-            {!storyActive && filtered.map((c) => (
+            {/* Render Polyline for Active Expedition Trail */}
+            {activeTrail && trailPoints.length > 0 && (
+              <Polyline 
+                positions={trailPoints} 
+                pathOptions={{ 
+                  color: activeTrailData?.color || '#10B981', 
+                  weight: 4, 
+                  dashArray: '8, 8',
+                  lineJoin: 'round'
+                }} 
+              />
+            )}
+
+            {/* Render Markers for Expedition Trail (Only if Active) */}
+            {activeTrail && activeTrailData && activeTrailData.cultures.map((cId) => {
+              const c = cultures.find(cult => cult.id === cId);
+              if (!c) return null;
+              return (
+                <Marker
+                  key={c.id}
+                  position={[c.lat, c.lng]}
+                  icon={createCustomIcon(c.type, selected?.id === c.id)}
+                  eventHandlers={{
+                    click: () => {
+                      setSelected(c);
+                      setMapCenter([c.lat, c.lng]);
+                      setMapZoom(7);
+                    }
+                  }}
+                />
+              );
+            })}
+
+            {/* Render Markers for filtered cultures (Only if Story Mode & Trail Mode are INACTIVE) */}
+            {!storyActive && !activeTrail && filtered.map((c) => (
               <Marker
                 key={c.id}
                 position={[c.lat, c.lng]}
@@ -1444,19 +1580,17 @@ export function JelajahSection({ lang, isDark }: Props) {
                       className="text-center space-y-4 py-4"
                     >
                       <div className="flex flex-col items-center gap-1">
-                        <Award className="w-12 h-12 text-amber-500 animate-bounce" />
-                        <div className={`px-4 py-1.5 rounded-full text-xs font-extrabold border ${getStoryMedal().color}`}>
+                        <Award className="w-10 h-10 text-amber-500 animate-bounce" />
+                        <div className={`px-4 py-1.5 rounded-full text-[10px] font-extrabold border ${getStoryMedal().color}`}>
                           {lang === 'id' ? getStoryMedal().medalId : getStoryMedal().medalEn}
                         </div>
-                        <div className="text-xs font-bold text-muted-foreground mt-1">
-                          {lang === 'id' ? getStoryMedal().titleId : getStoryMedal().titleEn}
+                        <div className="text-xs font-extrabold text-foreground mt-1.5">
+                          {lang === 'id' ? getStoryMedal().badgeId : getStoryMedal().badgeEn}
                         </div>
                       </div>
-                      <h4 className="text-foreground text-sm font-bold">{tx.congratulations}</h4>
-                      <p className="text-muted-foreground text-xs leading-relaxed">
-                        {lang === 'id' 
-                          ? 'Kamu berhasil menyesuaikan diri dan menghormati adat lokal. Pikirkan bagaimana nilai kelestarian Terranesia bisa kamu bawa pulang ke perkotaan modern!'
-                          : 'You successfully adapted and respected local customs. Think about how you can carry Terranesia preservation values back to modern urban environments!'}
+                      <h4 className="text-foreground text-xs font-bold">{tx.congratulations}</h4>
+                      <p className="text-muted-foreground text-[11px] leading-relaxed">
+                        {lang === 'id' ? getStoryMedal().descId : getStoryMedal().descEn}
                       </p>
                       
                       <div className="bg-primary/5 rounded-2xl p-4 border border-primary/10 text-left space-y-2">
@@ -1487,6 +1621,104 @@ export function JelajahSection({ lang, isDark }: Props) {
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   {tx.storyRestart}
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Expedition Trail Panel (Overlaying Map on Left) */}
+          <AnimatePresence>
+            {activeTrail && activeTrailData && (
+              <motion.div
+                initial={{ x: -350, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -350, opacity: 0 }}
+                className="absolute left-4 top-4 bottom-4 z-[999] w-[350px] bg-card/95 backdrop-blur-md border border-border rounded-3xl p-5 shadow-2xl flex flex-col justify-between overflow-y-auto"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4 border-b border-border pb-3">
+                    <div className="flex items-center gap-2">
+                      <Navigation className="w-5 h-5 text-primary animate-pulse" />
+                      <h3 className="text-foreground text-sm font-bold tracking-tight">
+                        {lang === 'id' ? activeTrailData.nameId : activeTrailData.nameEn}
+                      </h3>
+                    </div>
+                    <button
+                      onClick={() => setActiveTrail(null)}
+                      className="w-7 h-7 rounded-full hover:bg-muted text-muted-foreground flex items-center justify-center transition-colors cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <p className="text-muted-foreground text-xs leading-relaxed mb-4">
+                    {lang === 'id' ? activeTrailData.descId : activeTrailData.descEn}
+                  </p>
+
+                  <div className="px-3.5 py-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold mb-4 flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>{activeTrailData.carbonSave}</span>
+                  </div>
+
+                  <div className="space-y-3.5">
+                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                      {lang === 'id' ? 'RUTE PERJALANAN / ITINERARY' : 'EXPEDITION ITINERARY'}
+                    </div>
+
+                    <div className="space-y-3 border-l border-border/80 pl-4 ml-2 relative">
+                      {activeTrailData.cultures.map((cId, idx) => {
+                        const c = cultures.find(cult => cult.id === cId);
+                        if (!c) return null;
+                        const isCurrentSelected = selected?.id === cId;
+                        return (
+                          <div 
+                            key={cId} 
+                            onClick={() => {
+                              setSelected(c);
+                              setMapCenter([c.lat, c.lng]);
+                              setMapZoom(8);
+                            }}
+                            className={`group cursor-pointer text-left transition-all ${
+                              isCurrentSelected ? 'text-primary font-bold' : 'hover:text-primary text-foreground/80'
+                            }`}
+                          >
+                            <div className="relative">
+                              {/* Circle indicator on the left line */}
+                              <div className={`absolute -left-[22px] top-1 w-2.5 h-2.5 rounded-full border bg-card transition-colors ${
+                                isCurrentSelected 
+                                  ? 'border-primary bg-primary scale-125' 
+                                  : 'border-border group-hover:border-primary/60'
+                              }`} />
+                              <div className="text-xs font-bold flex items-center gap-1.5">
+                                <span>{idx + 1}. {lang === 'id' ? c.name : c.nameEn}</span>
+                              </div>
+                              <div className="text-[10px] text-muted-foreground mt-0.5 leading-normal">
+                                {c.location} • {lang === 'id' ? c.regionLabel : c.regionLabelEn}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Guidelines */}
+                  <div className="mt-6 p-3.5 rounded-2xl bg-muted/60 border border-border space-y-2">
+                    <div className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest flex items-center gap-1">
+                      <ShieldAlert className="w-3.5 h-3.5" />
+                      {lang === 'id' ? 'ATURAN & TATA TERTIB' : 'ATURAN & GUIDELINES'}
+                    </div>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed">
+                      {lang === 'id' ? activeTrailData.guidelinesId : activeTrailData.guidelinesEn}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setActiveTrail(null)}
+                  className="mt-6 w-full py-2.5 bg-primary text-primary-foreground text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 hover:opacity-90 transition-opacity cursor-pointer shadow-md"
+                >
+                  {lang === 'id' ? 'Selesaikan Rute' : 'Complete Expedition'}
                 </button>
               </motion.div>
             )}
@@ -1777,6 +2009,66 @@ export function JelajahSection({ lang, isDark }: Props) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Dasbor GIS Statistik Makro */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            {
+              icon: Trees,
+              titleId: 'Total Hutan Adat Terpetakan',
+              titleEn: 'Total Mapped Customary Forest',
+              value: '14,250 Ha',
+              color: 'text-emerald-500 bg-emerald-500/10'
+            },
+            {
+              icon: Thermometer,
+              titleId: 'Estimasi Pengurangan Karbon',
+              titleEn: 'Est. Carbon Offset',
+              value: '18.4K Ton / Thn',
+              color: 'text-sky-500 bg-sky-500/10'
+            },
+            {
+              icon: TrendingDown,
+              titleId: 'Rata-rata Indeks Pelestarian',
+              titleEn: 'Avg Preservation Index',
+              value: '84.5%',
+              color: 'text-amber-500 bg-amber-500/10'
+            },
+            {
+              icon: Compass,
+              titleId: 'Jumlah Komunitas Adat',
+              titleEn: 'Total Customary Tribes',
+              value: '13 Suku Mapped',
+              color: 'text-purple-500 bg-purple-500/10'
+            }
+          ].map((stat, idx) => {
+            const Icon = stat.icon;
+            return (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.08 }}
+                className="bg-card border border-border rounded-2xl p-4 shadow-md flex items-center gap-3.5"
+              >
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${stat.color}`}>
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                    {lang === 'id' ? stat.titleId : stat.titleEn}
+                  </div>
+                  <div className="text-lg font-extrabold text-foreground mt-0.5" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    {stat.value}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
 
       {/* Historical Data Charts section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
