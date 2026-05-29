@@ -6,6 +6,66 @@ interface Props { lang: 'id' | 'en' }
 
 const QRIS_PLACEHOLDER = 'https://images.unsplash.com/photo-1558520845-e80332dda30b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400&q=80';
 
+// String QRIS Statis default (dapat diganti dengan milik Anda)
+const DEFAULT_STATIC_QRIS = '00020101021126600015ID.CO.QRIS.WWW0215G102432924197300303UMI5108CC2012215204531153033605802ID5916TERRANESIA DONASI6006JAKARTA61051234562070703A01630453D8';
+
+// Helper untuk menghitung CRC-16 CCITT (False) standar QRIS/EMVCo
+function calculateCRC16(str: string): string {
+  let crc = 0xFFFF;
+  for (let c = 0; c < str.length; c++) {
+    const charCode = str.charCodeAt(c);
+    crc ^= (charCode << 8);
+    for (let i = 0; i < 8; i++) {
+      if (crc & 0x8000) {
+        crc = (crc << 1) ^ 0x1021;
+      } else {
+        crc = crc << 1;
+      }
+      crc &= 0xFFFF;
+    }
+  }
+  return crc.toString(16).toUpperCase().padStart(4, '0');
+}
+
+// Fungsi utama mengubah QRIS Statis menjadi Dinamis dengan Nominal
+function generateDynamicQRIS(staticQRIS: string, amount: number): string {
+  let qrisWithoutCrc = staticQRIS.trim();
+  if (qrisWithoutCrc.endsWith("6304")) {
+    qrisWithoutCrc = qrisWithoutCrc.slice(0, -4);
+  } else {
+    const index6304 = qrisWithoutCrc.lastIndexOf("6304");
+    if (index6304 !== -1) {
+      qrisWithoutCrc = qrisWithoutCrc.slice(0, index6304);
+    }
+  }
+
+  const tags: { [key: string]: string } = {};
+  let i = 0;
+  while (i < qrisWithoutCrc.length) {
+    const tag = qrisWithoutCrc.substring(i, i + 2);
+    const lenStr = qrisWithoutCrc.substring(i + 2, i + 4);
+    const len = parseInt(lenStr, 10);
+    const val = qrisWithoutCrc.substring(i + 4, i + 4 + len);
+    tags[tag] = val;
+    i += 4 + len;
+  }
+
+  tags['01'] = '12'; // Ubah ke dinamis
+  tags['54'] = amount.toString(); // Set nominal
+
+  let reassembled = '';
+  for (const tag of Object.keys(tags).sort()) {
+    const val = tags[tag];
+    const lenStr = val.length.toString().padStart(2, '0');
+    reassembled += tag + lenStr + val;
+  }
+
+  reassembled += "6304";
+  const newCrc = calculateCRC16(reassembled);
+
+  return reassembled + newCrc;
+}
+
 const t = {
   id: {
     title: 'Donasi untuk Terranesia',
@@ -69,17 +129,28 @@ const daysLeft = 28;
 
 export function DonasiSection({ lang }: Props) {
   const [selectedAmt, setSelectedAmt] = useState<number | null>(1);
+  const [customAmt, setCustomAmt] = useState<string>('');
   const [showQris, setShowQris] = useState(false);
   const [donated, setDonated] = useState(false);
   const [showTransparency, setShowTransparency] = useState(false);
   const tx = t[lang];
 
+  const getDonationAmount = () => {
+    const presetAmounts = [20000, 50000, 100000, 250000, 500000];
+    if (selectedAmt !== null) {
+      return presetAmounts[selectedAmt];
+    }
+    const val = parseInt(customAmt, 10);
+    return isNaN(val) ? 0 : val;
+  };
+
   const handleDonate = () => {
+    const amount = getDonationAmount();
+    if (amount <= 0) {
+      alert(lang === 'id' ? 'Silakan pilih atau masukkan nominal donasi terlebih dahulu.' : 'Please select or enter a donation amount first.');
+      return;
+    }
     setShowQris(true);
-    setTimeout(() => {
-      setShowQris(false);
-      setDonated(true);
-    }, 3000);
   };
 
   const funds = [
@@ -242,24 +313,43 @@ export function DonasiSection({ lang }: Props) {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-center py-8"
+                className="text-center py-6"
               >
                 <QrCode className="w-10 h-10 text-primary mx-auto mb-3" />
-                <p className="text-foreground font-semibold mb-2">{tx.scanQr}</p>
-                <div className="relative inline-block">
-                  <div className="w-48 h-48 mx-auto rounded-2xl bg-white p-3 border-2 border-primary/30 overflow-hidden">
-                    {/* QR Code placeholder pattern */}
-                    <div className="w-full h-full grid grid-cols-7 gap-0.5">
-                      {Array.from({ length: 49 }).map((_, i) => (
-                        <div
-                          key={i}
-                          className="rounded-sm"
-                          style={{ background: Math.random() > 0.4 ? '#1C2B1A' : 'transparent' }}
-                        />
-                      ))}
-                    </div>
+                <p className="text-foreground font-semibold mb-1">{tx.scanQr}</p>
+                <div className="text-xl font-bold text-primary mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                  Rp {getDonationAmount().toLocaleString('id-ID')}
+                </div>
+                <div className="relative inline-block mb-4">
+                  <div className="w-52 h-52 mx-auto rounded-2xl bg-white p-3 border-2 border-primary/30 flex items-center justify-center overflow-hidden shadow-inner">
+                    <img 
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
+                        generateDynamicQRIS(DEFAULT_STATIC_QRIS, getDonationAmount())
+                      )}`}
+                      alt="QRIS Dinamis"
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                 </div>
+                
+                <div className="space-y-2.5 max-w-[240px] mx-auto mb-4">
+                  <button
+                    onClick={() => {
+                      setShowQris(false);
+                      setDonated(true);
+                    }}
+                    className="w-full py-3 rounded-xl font-semibold text-xs bg-primary text-white hover:bg-primary/95 transition-all shadow-md active:scale-95 cursor-pointer"
+                  >
+                    {lang === 'id' ? 'Saya Sudah Membayar' : 'I Have Paid'}
+                  </button>
+                  <button
+                    onClick={() => setShowQris(false)}
+                    className="w-full py-2.5 rounded-xl text-[11px] text-muted-foreground hover:text-foreground transition-all hover:bg-muted active:scale-95 cursor-pointer"
+                  >
+                    {lang === 'id' ? 'Kembali / Batal' : 'Go Back / Cancel'}
+                  </button>
+                </div>
+
                 <div className="mt-4">
                   <motion.div
                     className="w-48 h-1 mx-auto rounded-full bg-muted overflow-hidden"
@@ -270,7 +360,11 @@ export function DonasiSection({ lang }: Props) {
                       className="w-1/2 h-full bg-primary rounded-full"
                     />
                   </motion.div>
-                  <p className="text-xs text-muted-foreground mt-2">{lang === 'id' ? 'Menunggu pembayaran...' : 'Waiting for payment...'}</p>
+                  <p className="text-[10px] text-muted-foreground mt-2 max-w-[280px] mx-auto leading-relaxed">
+                    {lang === 'id' 
+                      ? 'Scan menggunakan GoPay, OVO, ShopeePay, Dana, LinkAja, atau Mobile Banking' 
+                      : 'Scan using GoPay, OVO, ShopeePay, Dana, LinkAja, or Mobile Banking'}
+                  </p>
                 </div>
               </motion.div>
             ) : (
@@ -306,6 +400,8 @@ export function DonasiSection({ lang }: Props) {
                   <div className="mb-5">
                     <input
                       type="number"
+                      value={customAmt}
+                      onChange={(e) => setCustomAmt(e.target.value)}
                       placeholder={lang === 'id' ? 'Masukkan jumlah (Rp)' : 'Enter amount (IDR)'}
                       className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
                     />
