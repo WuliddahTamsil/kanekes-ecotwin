@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { JelajahSection } from './components/JelajahSection';
+import { HistoryCultureSection } from './components/HistoryCultureSection';
 import { TheLabSection } from './components/TheLabSection';
 import { EdukasiSection } from './components/EdukasiSection';
 import { DonasiSection } from './components/DonasiSection';
@@ -18,6 +19,7 @@ export default function App() {
         <main>
           <HeroSection lang={lang} />
           <JelajahSection lang={lang} isDark={isDark} />
+          <HistoryCultureSection lang={lang} />
           <TheLabSection lang={lang} />
           <EdukasiSection lang={lang} />
           <DonasiSection lang={lang} />

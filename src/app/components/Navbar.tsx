@@ -10,8 +10,8 @@ interface NavbarProps {
 }
 
 const t = {
-  id: { home: 'Beranda', explore: 'Jelajah', lab: 'Lab', edu: 'Edukasi', donate: 'Donasi' },
-  en: { home: 'Home', explore: 'Explore', lab: 'Lab', edu: 'Education', donate: 'Donate' },
+  id: { home: 'Beranda', explore: 'Jelajah', history: 'Sejarah & Budaya', lab: 'Lab', edu: 'Edukasi', donate: 'Donasi' },
+  en: { home: 'Home', explore: 'Explore', history: 'History & Culture', lab: 'Lab', edu: 'Education', donate: 'Donate' },
 };
 
 export function Navbar({ isDark, setIsDark, lang, setLang }: NavbarProps) {
@@ -28,6 +28,7 @@ export function Navbar({ isDark, setIsDark, lang, setLang }: NavbarProps) {
   const links = [
     { label: tx.home, href: '#beranda' },
     { label: tx.explore, href: '#jelajah' },
+    { label: tx.history, href: '#historyculture' },
     { label: tx.lab, href: '#lab' },
     { label: tx.edu, href: '#edukasi' },
     { label: tx.donate, href: '#donasi' },
