@@ -259,15 +259,145 @@ const cultures: CulturePoint[] = [
     philosophy: '"Belomba-lomba membaik" — menjaga keharmonisan bertetangga serta kepatuhan penuh pada tetua adat (Krama Desa).',
     philosophyEn: '"Belomba-lomba membaik" (Strive to improve) — maintaining neighborhood harmony and complete obedience to customary elders.',
   },
+  {
+    id: 'kajang',
+    name: 'Suku Kajang Ammatoa',
+    nameEn: 'Kajang Ammatoa Tribe',
+    location: 'Bulukumba, Sulawesi Selatan',
+    region: 'sulawesi',
+    regionLabel: 'Sulawesi',
+    regionLabelEn: 'Sulawesi',
+    type: 'lingkungan',
+    sustainability: 96,
+    desc: 'Suku adat Ammatoa Kajang yang hidup sederhana dengan pakaian serba hitam, menolak teknologi modern, dan melestarikan hutan adat "Karamaka" secara murni.',
+    descEn: 'Kajang Ammatoa tribe living in simplicity with all-black attire, rejecting modern technology, and purely preserving the sacred "Karamaka" forest.',
+    image: 'https://images.unsplash.com/photo-1511497584788-876760111969?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&q=80',
+    lat: -5.3188,
+    lng: 120.1472,
+    radarData: [
+      { subject: 'Lingkungan', value: 98 }, { subject: 'Tradisi', value: 95 }, { subject: 'Sosial', value: 92 },
+      { subject: 'Spiritual', value: 97 }, { subject: 'Ekonomi', value: 60 },
+    ],
+    envPractice: 'Larangan menggunakan alas kaki di hutan adat untuk mencegah pencemaran tanah, pembatasan ketat pengambilan hasil hutan, serta larangan membabat pohon.',
+    envPracticeEn: 'Ban on footwear in the sacred forest to prevent soil pollution, strict quotas on forest harvesting, and complete ban on tree cutting.',
+    wayOfLife: 'Masyarakat berpakaian hitam sebagai simbol kesederhanaan, tinggal di rumah panggung dengan orientasi seragam, dan hidup tanpa aliran listrik.',
+    wayOfLifeEn: 'The community wears black as a symbol of simplicity, living in stilt houses with uniform orientation, and living without electricity.',
+    philosophy: '"Kamase-masea" (Hidup sederhana/bersahaja) — mengedukasi keselarasan hidup dengan alam tanpa keserakahan materialistis.',
+    philosophyEn: '"Kamase-masea" (Living in simplicity) — teaching harmony with nature without materialistic greed.',
+  },
+  {
+    id: 'mentawai',
+    name: 'Suku Mentawai',
+    nameEn: 'Mentawai Tribe',
+    location: 'Siberut, Sumatera Barat',
+    region: 'sumatera',
+    regionLabel: 'Sumatera',
+    regionLabelEn: 'Sumatra',
+    type: 'ritual',
+    sustainability: 89,
+    desc: 'Suku asli kepulauan Mentawai yang memegang teguh kepercayaan animisme Arat Sabulungan, terkenal dengan seni rajah tubuh tertua di dunia.',
+    descEn: 'Indigenous Mentawai island tribe upholding the Arat Sabulungan animism beliefs, famous for the world\'s oldest body tattoo art.',
+    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&q=80',
+    lat: -1.3857,
+    lng: 98.9221,
+    radarData: [
+      { subject: 'Lingkungan', value: 92 }, { subject: 'Tradisi', value: 94 }, { subject: 'Sosial', value: 88 },
+      { subject: 'Spiritual', value: 96 }, { subject: 'Ekonomi', value: 55 },
+    ],
+    envPractice: 'Sebelum menebang pohon untuk membuat perahu atau berburu hewan, dukun adat (Sikerei) harus melakukan ritual meminta izin kepada roh alam.',
+    envPracticeEn: 'Before cutting trees for boats or hunting, customary shamans (Sikerei) perform rituals to ask permission from nature spirits.',
+    wayOfLife: 'Tinggal bersama di rumah adat besar Uma, berburu primata secara tradisional dengan busur beracun, dan melakukan upacara pengobatan Sikerei.',
+    wayOfLifeEn: 'Living together in a large ancestral Uma house, hunting primates traditionally with poisoned arrows, and performing Sikerei healing rituals.',
+    philosophy: 'Seluruh benda di dunia memiliki jiwa; ketidakseimbangan perlakuan manusia terhadap alam akan menyebabkan roh alam marah dan membawa petaka.',
+    philosophyEn: 'All things in the world possess a soul; imbalance in human treatment of nature will anger the spirits and bring catastrophe.',
+  },
+  {
+    id: 'waerebo',
+    name: 'Masyarakat Wae Rebo',
+    nameEn: 'Wae Rebo Community',
+    location: 'Manggarai, Nusa Tenggara Timur',
+    region: 'nusatenggara',
+    regionLabel: 'Nusa Tenggara',
+    regionLabelEn: 'Lesser Sunda',
+    type: 'tradisi',
+    sustainability: 85,
+    desc: 'Desa adat Manggarai terpencil di ketinggian 1.200 mdpl Flores yang mempertahankan 7 rumah kerucut raksasa Mbaru Niang penanda adat.',
+    descEn: 'Remote Manggarai customary village located 1,200m above sea level in Flores, preserving 7 giant conical Mbaru Niang houses as cultural symbols.',
+    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&q=80',
+    lat: -8.7758,
+    lng: 120.2831,
+    radarData: [
+      { subject: 'Lingkungan', value: 86 }, { subject: 'Tradisi', value: 93 }, { subject: 'Sosial', value: 95 },
+      { subject: 'Spiritual', value: 90 }, { subject: 'Ekonomi', value: 72 },
+    ],
+    envPractice: 'Konservasi ketat kawasan hutan pegunungan sekeliling desa untuk menjaga resapan air bersih serta larangan bercocok tanam yang merusak tanah.',
+    envPracticeEn: 'Strict conservation of mountainous forest zones surrounding the village to preserve water catchment and prohibition of soil-ruining farming.',
+    wayOfLife: 'Delapan keluarga bermukim bersama dalam satu Mbaru Niang, menanam kopi organik secara tradisional, dan menyambut tamu dengan upacara adat Waelu.',
+    wayOfLifeEn: 'Eight families living together in a single Mbaru Niang, farming organic coffee traditionally, and welcoming guests with the Waelu ritual.',
+    philosophy: '"Lonto Leok" (Duduk Melingkar) — semangat musyawarah mufakat, kebersamaan komunal, dan pembagian keadilan sosial secara merata.',
+    philosophyEn: '"Lonto Leok" (Circular Seating) — spirit of consensus, communal togetherness, and equal distribution of social justice.',
+  },
+  {
+    id: 'sumba',
+    name: 'Kampung Tarung Sumba',
+    nameEn: 'Sumba Tarung Village',
+    location: 'Sumba Barat, Nusa Tenggara Timur',
+    region: 'nusatenggara',
+    regionLabel: 'Nusa Tenggara',
+    regionLabelEn: 'Lesser Sunda',
+    type: 'ritual',
+    sustainability: 83,
+    desc: 'Pusat spiritual penganut kepercayaan lokal Marapu di Sumba Barat dengan barisan rumah beratap menara jerami menjulang tinggi.',
+    descEn: 'The spiritual center for Marapu local believers in West Sumba, featuring rows of high thatched tower customary houses.',
+    image: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&q=80',
+    lat: -9.6417,
+    lng: 119.4122,
+    radarData: [
+      { subject: 'Lingkungan', value: 82 }, { subject: 'Tradisi', value: 94 }, { subject: 'Sosial', value: 90 },
+      { subject: 'Spiritual', value: 95 }, { subject: 'Ekonomi', value: 68 },
+    ],
+    envPractice: 'Pelestarian teknik tenun ikat menggunakan pewarna alami dari tanaman nila dan akar mengkudu guna menghindari pencemaran limbah kimia cair.',
+    envPracticeEn: 'Preserving ikat weaving techniques using natural organic dye from indigo and madder root to avoid liquid chemical waste pollution.',
+    wayOfLife: 'Pembuatan tenun ikat pusaka oleh kaum wanita, upacara ritual pemujaan leluhur Marapu, dan festival ketangkasan berkuda Pasola.',
+    wayOfLifeEn: 'Making sacred ikat textiles by women, performing Marapu ancestor worship rituals, and the equestrian combat festival of Pasola.',
+    philosophy: 'Menjaga harmoni kosmis antara leluhur, manusia, dan alam liar; segala pelanggaran adat dipercaya mendatangkan kemarau atau paceklik.',
+    philosophyEn: 'Maintaining cosmic harmony between ancestors, humans, and wild nature; customary violations are believed to bring droughts.',
+  },
+  {
+    id: 'dani',
+    name: 'Suku Dani',
+    nameEn: 'Dani Tribe',
+    location: 'Lembah Baliem, Papua Pegunungan',
+    region: 'papua',
+    regionLabel: 'Papua',
+    regionLabelEn: 'Papua',
+    type: 'tradisi',
+    sustainability: 87,
+    desc: 'Suku petani tradisional di dataran tinggi Papua yang bermukim di rumah bulat Honai dan mengolah kebun ubi jalar secara berkelanjutan.',
+    descEn: 'Traditional farming tribe in Papua highlands living in round Honai houses and cultivating sweet potato gardens sustainably.',
+    image: 'https://images.unsplash.com/photo-1508193638397-1c4234db14d8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&q=80',
+    lat: -4.0975,
+    lng: 138.9489,
+    radarData: [
+      { subject: 'Lingkungan', value: 89 }, { subject: 'Tradisi', value: 91 }, { subject: 'Sosial', value: 88 },
+      { subject: 'Spiritual', value: 90 }, { subject: 'Ekonomi', value: 62 },
+    ],
+    envPractice: 'Pembuatan sistem parit irigasi kuno di lereng bukit curam untuk mengatur aliran air, mencegah longsor, dan menyuburkan tanaman ubi jalar.',
+    envPracticeEn: 'Constructing ancient irrigation ditch networks on steep slopes to control water flow, prevent landslides, and fertilize crops.',
+    wayOfLife: 'Tinggal bersama di Honai berkelompok, bertani padi/ubi jalar komunal, menyelenggarakan upacara Bakar Batu (kebersamaan), dan pesta panen.',
+    wayOfLifeEn: 'Living in clustered Honai groups, farming sweet potatoes communally, hosting Bakar Batu (cooking festival), and harvest feasts.',
+    philosophy: '"Kaneka" — keyakinan bahwa tanah subur lembah Baliem adalah ibu penyangga kehidupan yang wajib dijaga kebersihannya dan tidak dieksploitasi berlebih.',
+    philosophyEn: '"Kaneka" — the belief that the fertile Baliem valley soil is the mother of life which must be kept clean and not over-exploited.',
+  },
 ];
 
 const preservationData = [
-  { year: '2000', baduy: 98, toraja: 90, dayak: 85, minang: 82, bali: 93, asmat: 90, naga: 96, sasak: 84 },
-  { year: '2005', baduy: 97, toraja: 87, dayak: 80, minang: 81, bali: 92, asmat: 90, naga: 95, sasak: 83 },
-  { year: '2010', baduy: 96, toraja: 85, dayak: 82, minang: 79, bali: 91, asmat: 89, naga: 95, sasak: 82 },
-  { year: '2015', baduy: 95, toraja: 83, dayak: 84, minang: 78, bali: 90, asmat: 88, naga: 94, sasak: 82 },
-  { year: '2020', baduy: 95, toraja: 81, dayak: 85, minang: 78, bali: 90, asmat: 88, naga: 94, sasak: 82 },
-  { year: '2025', baduy: 95, toraja: 80, dayak: 92, minang: 78, bali: 90, asmat: 88, naga: 94, sasak: 82 },
+  { year: '2000', baduy: 98, toraja: 90, dayak: 85, minang: 82, bali: 93, asmat: 90, naga: 96, sasak: 84, kajang: 98, mentawai: 90, waerebo: 88, sumba: 85, dani: 89 },
+  { year: '2005', baduy: 97, toraja: 87, dayak: 80, minang: 81, bali: 92, asmat: 90, naga: 95, sasak: 83, kajang: 97, mentawai: 89, waerebo: 87, sumba: 84, dani: 88 },
+  { year: '2010', baduy: 96, toraja: 85, dayak: 82, minang: 79, bali: 91, asmat: 89, naga: 95, sasak: 82, kajang: 96, mentawai: 88, waerebo: 86, sumba: 84, dani: 88 },
+  { year: '2015', baduy: 95, toraja: 83, dayak: 84, minang: 78, bali: 90, asmat: 88, naga: 94, sasak: 82, kajang: 96, mentawai: 88, waerebo: 85, sumba: 83, dani: 87 },
+  { year: '2020', baduy: 95, toraja: 81, dayak: 85, minang: 78, bali: 90, asmat: 88, naga: 94, sasak: 82, kajang: 96, mentawai: 89, waerebo: 85, sumba: 83, dani: 87 },
+  { year: '2025', baduy: 95, toraja: 80, dayak: 92, minang: 78, bali: 90, asmat: 88, naga: 94, sasak: 82, kajang: 96, mentawai: 89, waerebo: 85, sumba: 83, dani: 87 },
 ];
 
 const typeColors: Record<string, string> = {
@@ -612,6 +742,9 @@ export function JelajahSection({ lang, isDark }: Props) {
     lang === 'id' ? "[AI] Pola pelestarian Tana Ulen Suku Dayak dianalisis: 92% Sangat Lestari." : "[AI] Dayak Tana Ulen preservation pattern analyzed: 92% Highly Sustainable.",
     lang === 'id' ? "[GIS] Satelit memantau kerapatan Hutan Mangrove Suku Asmat: Terjaga Baik." : "[GIS] Satellite monitors Asmat mangrove forest density: Well Preserved.",
     lang === 'id' ? "[AI] Nilai kearifan Sasak Sade terintegrasi dalam pemetaan." : "[AI] Sasak Sade wisdom values integrated in mapping.",
+    lang === 'id' ? "[GIS] Hutan adat Karamaka Suku Kajang termonitor bebas dari deforestasi." : "[GIS] Suku Kajang's Karamaka sacred forest monitored free of deforestation.",
+    lang === 'id' ? "[AI] Analisis kearifan lokal Arat Sabulungan Suku Mentawai terdaftar." : "[AI] Mentawai's Arat Sabulungan local wisdom analysis registered.",
+    lang === 'id' ? "[GIS] Pemukiman adat Mbaru Niang Wae Rebo terpantau stabil di lereng pegunungan." : "[GIS] Wae Rebo's Mbaru Niang stilt houses monitored stable on mountain slopes.",
     lang === 'id' ? "[GIS] Indeks Kelestarian Budaya Indonesia diperbarui: 84.5% (Optimal)." : "[GIS] Indonesia Cultural Preservation Index updated: 84.5% (Optimal)."
   ];
 
@@ -722,6 +855,46 @@ export function JelajahSection({ lang, isDark }: Props) {
         score: 82,
         reasonId: 'Kemiripan tinggi dalam pelestarian anyaman adat serta arsitektur tahan gempa berbahan bambu/jerami tradisional.',
         reasonEn: 'High similarity in custom weaving preservation and earthquake-resistant bamboo/thatch customary architectures.'
+      };
+    } else if (currentId === 'kajang') {
+      return {
+        targetId: 'baduy',
+        targetName: 'Suku Baduy',
+        score: 95,
+        reasonId: 'Memiliki kesamaan dalam pelestarian hutan adat suci secara ketat, menolak teknologi modern/listrik, dan berpakaian adat sangat sederhana.',
+        reasonEn: 'Shares strict sacred forest preservation, rejects modern technology/electricity, and wears highly simple customary attire.'
+      };
+    } else if (currentId === 'mentawai') {
+      return {
+        targetId: 'asmat',
+        targetName: 'Suku Asmat',
+        score: 89,
+        reasonId: 'Kemiripan dalam ikatan spiritual dengan roh hutan (Arat Sabulungan vs roh Jew) serta pelestarian seni tradisional sakral.',
+        reasonEn: 'High similarity in spiritual bonds with forest spirits (Arat Sabulungan vs Jew spirits) and sacred traditional art preservation.'
+      };
+    } else if (currentId === 'waerebo') {
+      return {
+        targetId: 'sumba',
+        targetName: 'Kampung Tarung Sumba',
+        score: 88,
+        reasonId: 'Sama-sama melestarikan arsitektur rumah adat tinggi berbahan serat alam organik serta tradisi komunal musyawarah adat di NTT.',
+        reasonEn: 'Both preserve high customary house architectures made of organic natural fibers and communal decision customs in NTT.'
+      };
+    } else if (currentId === 'sumba') {
+      return {
+        targetId: 'waerebo',
+        targetName: 'Masyarakat Wae Rebo',
+        score: 88,
+        reasonId: 'Sama-sama merepresentasikan kearifan arsitektur organik tradisional khas NTT serta pewarnaan tenun pusaka berbahan alami.',
+        reasonEn: 'Both represent traditional organic architectural wisdom of NTT and dye sacred weaving with natural materials.'
+      };
+    } else if (currentId === 'dani') {
+      return {
+        targetId: 'dayak',
+        targetName: 'Suku Dayak Kenyah',
+        score: 86,
+        reasonId: 'Sama-sama menerapkan pola pemukiman adat berkelompok (Honai vs Rumah Betang) serta sistem pertanian/perkebunan komunal.',
+        reasonEn: 'Both apply clustered customary settlements (Honai vs Rumah Betang) and communal farming/gardening systems.'
       };
     } else {
       return {
