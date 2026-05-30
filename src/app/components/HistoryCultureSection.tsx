@@ -1030,6 +1030,8 @@ function resetCardTilt(event: React.MouseEvent<HTMLButtonElement>) {
   event.currentTarget.style.setProperty('--tilt-y', '0deg');
 }
 
+const ITEMS_PER_PAGE = 6;
+
 function getCultureOfTheDay() {
   const dayIndex = Math.floor(Date.now() / 86_400_000) % cultureCards.length;
   return cultureCards[dayIndex];
@@ -1047,6 +1049,7 @@ export function HistoryCultureSection({ lang }: Props) {
   const [ecoSlider, setEcoSlider] = useState(58);
   const [rhythmScore, setRhythmScore] = useState(62);
   const [vrOpen, setVrOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const cultureOfDay = useMemo(getCultureOfTheDay, []);
   const trendingCards = useMemo(() => cultureCards.filter((card) => card.trending).slice(0, 6), []);
@@ -1073,6 +1076,22 @@ export function HistoryCultureSection({ lang }: Props) {
       return regionMatch && categoryMatch && searchMatch;
     });
   }, [activeCategory, activeRegion, search]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredCards.length / ITEMS_PER_PAGE));
+  const pagedCards = useMemo(
+    () => filteredCards.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE),
+    [filteredCards, currentPage]
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeCategory, activeRegion, search]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   const openCard = (card: CultureCard) => {
     setSelectedCard(card);
@@ -1239,9 +1258,12 @@ export function HistoryCultureSection({ lang }: Props) {
           </div>
         </div>
 
-        <div className="mb-5 flex items-center justify-between gap-3">
+        <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-muted-foreground">
             Menampilkan <span className="font-semibold text-foreground">{filteredCards.length}</span> budaya
+            {totalPages > 1 && (
+              <span className="ml-2 text-xs text-muted-foreground">(Halaman {currentPage} dari {totalPages})</span>
+            )}
           </p>
           <div className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex">
             <span className="h-2 w-2 rounded-full bg-primary" />
@@ -1250,7 +1272,7 @@ export function HistoryCultureSection({ lang }: Props) {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-          {filteredCards.map((card) => (
+          {pagedCards.map((card) => (
             <motion.button
               key={card.id}
               layoutId={`culture-card-${card.id}`}
@@ -1303,6 +1325,30 @@ export function HistoryCultureSection({ lang }: Props) {
             </motion.button>
           ))}
         </div>
+
+        {filteredCards.length > 0 && (
+          <div className="mt-6 flex flex-col items-center justify-between gap-3 sm:flex-row">
+            <p className="text-sm text-muted-foreground">{Math.min(ITEMS_PER_PAGE, filteredCards.length)} budaya ditampilkan per halaman.</p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className="rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition hover:border-primary/40 hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Sebelumnya
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className="rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition hover:border-primary/40 hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Berikutnya
+              </button>
+            </div>
+          </div>
+        )}
 
         {filteredCards.length === 0 && (
           <div className="text-center py-12">
